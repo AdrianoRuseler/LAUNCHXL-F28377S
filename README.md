@@ -8,3 +8,6 @@ http://www.ti.com/tool/ccstudio
 
 ## controlSUITE 
 http://www.ti.com/tool/controlsuite
+
+## F28377S LaunchPad: Project 0
+https://www.youtube.com/watch?v=OVPCUFkAD9M
