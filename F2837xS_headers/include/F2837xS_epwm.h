@@ -5,8 +5,8 @@
 // TITLE:   F2837xS Device EPWM Register Definitions.
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -243,6 +243,16 @@ struct HRPCTL_BITS {                    // bits description
 union HRPCTL_REG {
     Uint16  all;
     struct  HRPCTL_BITS  bit;
+};
+
+struct TRREM_BITS {                     // bits description
+    Uint16 TRREM:11;                    // 10:0 Translator Remainder Bits
+    Uint16 rsvd1:5;                     // 15:11 Reserved
+};
+
+union TRREM_REG {
+    Uint16  all;
+    struct  TRREM_BITS  bit;
 };
 
 struct GLDCTL_BITS {                    // bits description
@@ -1006,7 +1016,8 @@ struct EPWM_REGS {
     union   HRCNFG2_REG                      HRCNFG2;                      // HRPWM Configuration 2 Register
     Uint16                                   rsvd8[5];                     // Reserved
     union   HRPCTL_REG                       HRPCTL;                       // High Resolution Period Control Register 
-    Uint16                                   rsvd9[6];                     // Reserved
+    union   TRREM_REG                        TRREM;                        // Translator High Resolution Remainder Register
+    Uint16                                   rsvd9[5];                     // Reserved
     union   GLDCTL_REG                       GLDCTL;                       // Global PWM Load Control Register
     union   GLDCFG_REG                       GLDCFG;                       // Global PWM Load Config Register 
     Uint16                                   rsvd10[2];                    // Reserved

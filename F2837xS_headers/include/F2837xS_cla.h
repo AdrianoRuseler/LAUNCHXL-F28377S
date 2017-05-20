@@ -5,8 +5,8 @@
 // TITLE:   F2837xS Device CLA Register Definitions.
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -250,8 +250,8 @@ union SOFTINTFRC_REG {
 };
 
 struct CLA_SOFTINT_REGS {
-    union   SOFTINTEN_REG                    SOFTINTEN;                    // Task Software Interrupt Enable
-    union   SOFTINTFRC_REG                   SOFTINTFRC;                   // Task Software Interrupt Force
+    union   SOFTINTEN_REG                    SOFTINTEN;                    // CLA Software Interrupt Enable Register
+    union   SOFTINTFRC_REG                   SOFTINTFRC;                   // CLA Software Interrupt Force Register
 };
 
 //---------------------------------------------------------------------------

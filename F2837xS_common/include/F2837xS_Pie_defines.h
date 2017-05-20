@@ -5,8 +5,8 @@
 // TITLE:  #defines used in PIE examples
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -18,6 +18,9 @@
 extern "C" {
 #endif
 
+//
+// Defines
+//
 #define PIEACK_GROUP1   0x0001
 #define PIEACK_GROUP2   0x0002
 #define PIEACK_GROUP3   0x0004
@@ -37,6 +40,6 @@ extern "C" {
 
 #endif   // - end of F2837xS_PIE_DEFINES_H
 
-//===========================================================================
-// End of file.
-//===========================================================================
+//
+// End of file
+//

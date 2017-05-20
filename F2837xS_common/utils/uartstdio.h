@@ -1,20 +1,22 @@
-//########################################################################### 
-// 
-// FILE:   uartstdio.h 
-// 
+//###########################################################################
+//
+// FILE:   uartstdio.h
+//
 // TITLE:  Prototypes for the UART console functions.
-// 
-//########################################################################### 
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+//
+//###########################################################################
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
 
-
 #ifndef __UARTSTDIO_H__
 #define __UARTSTDIO_H__
 
+//
+// Included Files
+//
 #include <stdarg.h>
 
 //*****************************************************************************
@@ -28,12 +30,10 @@ extern "C"
 {
 #endif
 
-//*****************************************************************************
 //
 // If built for buffered operation, the following labels define the sizes of
 // the transmit and receive buffers respectively.
 //
-//*****************************************************************************
 #ifdef UART_BUFFERED
 #ifndef UART_RX_BUFFER_SIZE
 #define UART_RX_BUFFER_SIZE     128
@@ -43,11 +43,9 @@ extern "C"
 #endif
 #endif
 
-//*****************************************************************************
 //
-// Prototypes for the APIs.
+// Function Prototypes
 //
-//*****************************************************************************
 extern void UARTStdioConfig(uint32_t ui32Port, uint32_t ui32Baud,
                             uint32_t ui32SrcClock);
 extern int UARTgets(char *pcBuf, uint32_t ui32Len);
@@ -74,3 +72,7 @@ extern void UARTEchoSet(bool bEnable);
 #endif
 
 #endif // __UARTSTDIO_H__
+
+//
+// End of file
+//

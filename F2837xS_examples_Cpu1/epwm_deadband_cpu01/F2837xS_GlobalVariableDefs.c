@@ -5,8 +5,8 @@
 // TITLE:   F2837xS Global Variables and Data Section Pragmas.
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -85,6 +85,23 @@ volatile struct ADC_RESULT_REGS AdcdResultRegs;
 #endif
 volatile struct ANALOG_SUBSYS_REGS AnalogSubsysRegs;
 
+#if __TI_COMPILER_VERSION__ >= 16006000
+//----------------------------------------
+#ifdef __cplusplus
+#pragma DATA_SECTION("CanaRegsFile")
+#else
+#pragma DATA_SECTION(CanaRegs,"CanaRegsFile");
+#endif
+volatile struct CAN_REGS CanaRegs;
+
+//----------------------------------------
+#ifdef __cplusplus
+#pragma DATA_SECTION("CanbRegsFile")
+#else
+#pragma DATA_SECTION(CanbRegs,"CanbRegsFile");
+#endif
+volatile struct CAN_REGS CanbRegs;
+#endif
 
 //----------------------------------------
 #ifdef __cplusplus

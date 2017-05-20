@@ -17,6 +17,9 @@ MEMORY
 
    ANALOG_SUBSYS : origin = 0x05D180, length = 0x000080
 
+   CANA          : origin = 0x048000, length = 0x000800
+   CANB          : origin = 0x04A000, length = 0x000800
+
    CLA1          : origin = 0x001400, length = 0x000040     /* CLA registers */
 
    CLB_XBAR      : origin = 0x007A40, length = 0x000040
@@ -161,12 +164,15 @@ SECTIONS
    AdccRegsFile          : > ADCC,         PAGE = 1
    AdcdRegsFile          : > ADCD,         PAGE = 1
 
-   AnalogSubsysRegsFile : > ANALOG_SUBSYS, PAGE = 1
+   AnalogSubsysRegsFile  : > ANALOG_SUBSYS, PAGE = 1
+
+   CanaRegsFile          : > CANA,         PAGE = 1
+   CanbRegsFile          : > CANB,         PAGE = 1
 
    Cla1RegsFile          : > CLA1,         PAGE = 1
    Cla1SoftIntRegsFile   : > PIE_CTRL,     PAGE = 1, type=DSECT
 
-   ClbXbarRegsFile      : > CLB_XBAR     PAGE = 1
+   ClbXbarRegsFile       : > CLB_XBAR     PAGE = 1
 
    Cmpss1RegsFile        : > CMPSS1,      PAGE = 1
    Cmpss2RegsFile        : > CMPSS2,      PAGE = 1
@@ -277,7 +283,6 @@ SECTIONS
    SyncSocRegsFile       : > SYNC_SOC,    PAGE = 1
 
    WdRegsFile            : > WD,           PAGE = 1
-
 
    XintRegsFile          : > XINT          PAGE = 1
    MemCfgRegs            : > MEMCFG        PAGE = 1

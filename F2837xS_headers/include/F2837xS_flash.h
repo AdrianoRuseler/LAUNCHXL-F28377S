@@ -5,8 +5,8 @@
 // TITLE:   F2837xS Device FLASH Register Definitions.
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -80,17 +80,6 @@ union FPAC1_REG {
     struct  FPAC1_BITS  bit;
 };
 
-struct FMAC_BITS {                      // bits description
-    Uint16 BANK:3;                      // 2:0 Flash Bank for FSM and Software Interface Operations
-    Uint16 rsvd1:13;                    // 15:3 Reserved
-    Uint16 rsvd2:16;                    // 31:16 Reserved
-};
-
-union FMAC_REG {
-    Uint32  all;
-    struct  FMAC_BITS  bit;
-};
-
 struct FMSTAT_BITS {                    // bits description
     Uint16 rsvd1:1;                     // 0 Reserved
     Uint16 rsvd2:1;                     // 1 Reserved
@@ -137,8 +126,7 @@ struct FLASH_CTRL_REGS {
     union   FBFALLBACK_REG                   FBFALLBACK;                   // Flash Bank Fallback Power Register
     union   FBPRDY_REG                       FBPRDY;                       // Flash Bank Pump Ready Register
     union   FPAC1_REG                        FPAC1;                        // Flash Pump Access Control Register 1
-    Uint16                                   rsvd2[2];                     // Reserved
-    union   FMAC_REG                         FMAC;                         // Flash Module Access Control Register
+    Uint16                                   rsvd2[4];                     // Reserved
     union   FMSTAT_REG                       FMSTAT;                       // Flash Module Status Register
     Uint16                                   rsvd3[340];                   // Reserved
     union   FRD_INTF_CTRL_REG                FRD_INTF_CTRL;                // Flash Read Interface Control Register

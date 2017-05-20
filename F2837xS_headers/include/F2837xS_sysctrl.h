@@ -5,8 +5,8 @@
 // TITLE:   F2837xS Device SYSCTRL Register Definitions.
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -151,24 +151,6 @@ struct DC5_BITS {                       // bits description
 union DC5_REG {
     Uint32  all;
     struct  DC5_BITS  bit;
-};
-
-struct DC6_BITS {                       // bits description
-    Uint16 rsvd1:1;                     // 0 Reserved
-    Uint16 rsvd2:1;                     // 1 Reserved
-    Uint16 rsvd3:1;                     // 2 Reserved
-    Uint16 rsvd4:1;                     // 3 Reserved
-    Uint16 rsvd5:1;                     // 4 Reserved
-    Uint16 rsvd6:1;                     // 5 Reserved
-    Uint16 rsvd7:1;                     // 6 Reserved
-    Uint16 rsvd8:1;                     // 7 Reserved
-    Uint16 rsvd9:8;                     // 15:8 Reserved
-    Uint16 rsvd10:16;                   // 31:16 Reserved
-};
-
-union DC6_REG {
-    Uint32  all;
-    struct  DC6_BITS  bit;
 };
 
 struct DC7_BITS {                       // bits description
@@ -601,6 +583,17 @@ union SOFTPRES16_REG {
     struct  SOFTPRES16_BITS  bit;
 };
 
+struct SYSDBGCTL_BITS {                 // bits description
+    Uint16 BIT_0:1;                     // 0 Used in PLL startup. Only reset by POR.
+    Uint16 rsvd1:15;                    // 15:1 Reserved
+    Uint16 rsvd2:16;                    // 31:16 Reserved
+};
+
+union SYSDBGCTL_REG {
+    Uint32  all;
+    struct  SYSDBGCTL_BITS  bit;
+};
+
 struct DEV_CFG_REGS {
     Uint16                                   rsvd1[8];                     // Reserved
     union   PARTIDL_REG                      PARTIDL;                      // Lower 32-bit of Device PART Identification Number
@@ -613,7 +606,7 @@ struct DEV_CFG_REGS {
     union   DC3_REG                          DC3;                          // Device Capability: Peripheral Customization
     union   DC4_REG                          DC4;                          // Device Capability: Peripheral Customization
     union   DC5_REG                          DC5;                          // Device Capability: Peripheral Customization
-    union   DC6_REG                          DC6;                          // Device Capability: Peripheral Customization
+    Uint16                                   rsvd3[2];                     // Reserved
     union   DC7_REG                          DC7;                          // Device Capability: Peripheral Customization
     union   DC8_REG                          DC8;                          // Device Capability: Peripheral Customization
     union   DC9_REG                          DC9;                          // Device Capability: Peripheral Customization
@@ -623,34 +616,35 @@ struct DEV_CFG_REGS {
     union   DC13_REG                         DC13;                         // Device Capability: Peripheral Customization
     union   DC14_REG                         DC14;                         // Device Capability: Analog Modules Customization
     union   DC15_REG                         DC15;                         // Device Capability: Analog Modules Customization
-    Uint16                                   rsvd3[2];                     // Reserved
+    Uint16                                   rsvd4[2];                     // Reserved
     union   DC17_REG                         DC17;                         // Device Capability: Analog Modules Customization
     union   DC18_REG                         DC18;                         // Device Capability: CPU1 Lx SRAM Customization
-    Uint16                                   rsvd4[2];                     // Reserved
+    Uint16                                   rsvd5[2];                     // Reserved
     union   DC20_REG                         DC20;                         // Device Capability: GSx SRAM Customization
-    Uint16                                   rsvd5[38];                    // Reserved
+    Uint16                                   rsvd6[38];                    // Reserved
     union   PERCNF1_REG                      PERCNF1;                      // Peripheral Configuration register
-    Uint16                                   rsvd6[18];                    // Reserved
+    Uint16                                   rsvd7[18];                    // Reserved
     union   FUSEERR_REG                      FUSEERR;                      // e-Fuse error Status register
-    Uint16                                   rsvd7[12];                    // Reserved
+    Uint16                                   rsvd8[12];                    // Reserved
     union   SOFTPRES0_REG                    SOFTPRES0;                    // Processing Block Software Reset register
     union   SOFTPRES1_REG                    SOFTPRES1;                    // EMIF Software Reset register
     union   SOFTPRES2_REG                    SOFTPRES2;                    // Peripheral Software Reset register
     union   SOFTPRES3_REG                    SOFTPRES3;                    // Peripheral Software Reset register
     union   SOFTPRES4_REG                    SOFTPRES4;                    // Peripheral Software Reset register
-    Uint16                                   rsvd8[2];                     // Reserved
+    Uint16                                   rsvd9[2];                     // Reserved
     union   SOFTPRES6_REG                    SOFTPRES6;                    // Peripheral Software Reset register
     union   SOFTPRES7_REG                    SOFTPRES7;                    // Peripheral Software Reset register
     union   SOFTPRES8_REG                    SOFTPRES8;                    // Peripheral Software Reset register
     union   SOFTPRES9_REG                    SOFTPRES9;                    // Peripheral Software Reset register
-    Uint16                                   rsvd9[2];                     // Reserved
-    union   SOFTPRES11_REG                   SOFTPRES11;                   // Peripheral Software Reset register
     Uint16                                   rsvd10[2];                    // Reserved
+    union   SOFTPRES11_REG                   SOFTPRES11;                   // Peripheral Software Reset register
+    Uint16                                   rsvd11[2];                    // Reserved
     union   SOFTPRES13_REG                   SOFTPRES13;                   // Peripheral Software Reset register
     union   SOFTPRES14_REG                   SOFTPRES14;                   // Peripheral Software Reset register
-    Uint16                                   rsvd11[2];                    // Reserved
+    Uint16                                   rsvd12[2];                    // Reserved
     union   SOFTPRES16_REG                   SOFTPRES16;                   // Peripheral Software Reset register
-    Uint16                                   rsvd12[138];                  // Reserved
+    Uint16                                   rsvd13[136];                  // Reserved
+    union   SYSDBGCTL_REG                    SYSDBGCTL;                    // System Debug Control register
 };
 
 struct CLKCFGLOCK1_BITS {               // bits description

@@ -1,16 +1,15 @@
-//###############################################################################
+//#############################################################################
 //
 // FILE:   F2837xS_Can_defines.h
 //
 // TITLE:  Common defines used in CAN Test Cases
-//		   Most of these map legacy Sonata naming to the new public define names
 //
-//###############################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+//#############################################################################
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
-//###############################################################################
+//#############################################################################
 
 #ifndef F2837xS_CAN_DEFINES_H
 #define F2837xS_CAN_DEFINES_H
@@ -19,19 +18,13 @@
 extern "C" {
 #endif
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//Note:
-//Write Mask to stop writing to control critical bit
-//Read  Mask for the registers which has undefined bits
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// Defines
+//
 
-
-
-//===========================================================================
-//	MACROS
-//===========================================================================
-
+//
 // Reset Values
+//
 #define CAN_RESET_VALUE_ZERO			0x00000000
 #define CAN_CTL_RESET_VALUE		    	0x00001401
 #define CAN_ES_RESET_VALUE				0x00000007
@@ -40,12 +33,15 @@ extern "C" {
 #define CAN_RAM_INIT_RESET_VALUE		0x00000005
 #define CAN_IF_CMD_RESET_VALUE			0x00000001
 #define CAN_IF_MASK_RESET_VALUE	    	0xFFFFFFFF
-///////////////////////////////////////////////////////////////////////////////
 
+//
 // Register value when Peripheral Clock is Disabled
+//
 #define CAN_MODULE_CLK_DISABLE_VALUE	0x00000000
 
+//
 // Bit field definition of CAN_CTL register.
+//
 #define CAN_CTL_INIT		0x00000001  // Initialization
 #define CAN_CTL_IE0         0x00000002  // Interrupt Enable 0
 #define CAN_CTL_SIE         0x00000004  // Status Interrupt Enable
@@ -62,10 +58,10 @@ extern "C" {
 #define CAN_CTL_IE1		    0x00020000	// Interrupt Enable 1
 #define CAN_CTL_PDR		    0x01000000	// Power Down Mode Request
 #define CAN_CTL_WUBA		0x02000000	// Wake Up on Bus Activity
-///////////////////////////////////////////////////////////////////////////////////
 
-
+//
 // Bit field definition of CAN_IF1_CMD register.
+//
 #define CAN_IF1_CMD_MESSNUM_S		0
 #define CAN_IF1_CMD_MESSNUM_M		0x000000FF	// Message Number
 #define CAN_IF1_CMD_BUSY			0x00008000	// Busy Flag
@@ -77,9 +73,10 @@ extern "C" {
 #define CAN_IF1_CMD_ARB			    0x00200000	// Access Arbitration Bits
 #define CAN_IF1_CMD_MASK			0x00400000	// Access Mask Bits
 #define CAN_IF1_CMD_WR_RD			0x00800000	// Write and Read
-////////////////////////////////////////////////////////////////////////////////////
 
+//
 // Bit field definition of CAN_IF2_CMD register.
+//
 #define CAN_IF2_CMD_MESSNUM_S		0
 #define CAN_IF2_CMD_MESSNUM_M		0x000000FF	// Message Number
 #define CAN_IF2_CMD_BUSY			0x00008000	// Busy Flag
@@ -91,9 +88,6 @@ extern "C" {
 #define CAN_IF2_CMD_ARB			    0x00200000	// Access Arbitration Bits
 #define CAN_IF2_CMD_MASK			0x00400000	// Access Mask Bits
 #define CAN_IF2_CMD_WR_RD			0x00800000	// Write and Read
-////////////////////////////////////////////////////////////////////////////////////
-
-
 
 #ifdef __cplusplus
 }
@@ -101,6 +95,6 @@ extern "C" {
 
 #endif   // - end of F2837xS_CAN_DEFINES_H
 
-//===========================================================================
-// End of file.
-//===========================================================================
+//
+// End of file
+//

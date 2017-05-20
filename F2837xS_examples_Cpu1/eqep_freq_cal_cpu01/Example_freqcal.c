@@ -1,8 +1,8 @@
 //###########################################################################
 //
-// FILE:	Example_freqcal.c
+// FILE:    Example_freqcal.c
 //
-// TITLE:	Frequency measurement using EQEP peripheral
+// TITLE:    Frequency measurement using EQEP peripheral
 //
 // DESCRIPTION:
 //
@@ -13,46 +13,48 @@
 //
 //
 // 1. This program calculates: **freqhz_fr**
-//    freqhz_fr or v = (x2-x1)/T                                                 - Equation 1
+//    freqhz_fr or v = (x2-x1)/T      - Equation 1
 //
-// If max/base freq = 10kHz:   10kHz = (x2-x1)/(2/100Hz)                         - Equation 2
+// If max/base freq = 10kHz:   10kHz = (x2-x1)/(2/100Hz)    - Equation 2
 //                      max (x2-x1) = 200 counts = freqScaler_fr
-//		Note: T = 2/100Hz. 2 is from (x2-x1)/2 - because QPOSCNT counts 2 edges per cycle
-//		                                         (rising and falling)
+//   Note: T = 2/100Hz. 2 is from (x2-x1)/2 - because QPOSCNT counts 2 edges
+//                                            per cycle(rising and falling)
 //
 // If both sides of Equation 2 are divided by 10 kHz, then:
-//                            1 = (x2-x1)/[10kHz*(2/100Hz)] where [10kHz* (2/100Hz)] = 200
-//							Because (x2-x1) must be <200 (max),
-//						    (x2-x1)/200 < 1 for all frequencies less than max
-//							freq_fr = (x2-x1)/200 or (x2-x1)/[10kHz*(2/100Hz)]    - Equation 3
+//      1 = (x2-x1)/[10kHz*(2/100Hz)] where [10kHz* (2/100Hz)] = 200
+//      Because (x2-x1) must be <200 (max),
+//      (x2-x1)/200 < 1 for all frequencies less than max
+//      freq_fr = (x2-x1)/200 or (x2-x1)/[10kHz*(2/100Hz)]    - Equation 3
 //
-// To get back to original velocity equation, Equation 1, multiply Equation 3 by 10 kHz
-//                           freqhz_fr (or velocity) = 10kHz*(x2-x1)/[10kHz*(2/100Hz)]
-//						                           = (x2-x1)/(2/100Hz)           - Final equation
+// To get back to original velocity equation, Equation 1,
+// multiply Equation 3 by 10 kHz
+//      freqhz_fr (or velocity) = 10kHz*(x2-x1)/[10kHz*(2/100Hz)]
+//                              = (x2-x1)/(2/100Hz)           - Final equation
 //
 // 2. **min freq** = 1 count/(2/100Hz) = 50 Hz
 //
 // 3. **freqhz_pr**
-//    freqhz_pr or v = X/(t2-t1)                                                 - Equation 4
+//    freqhz_pr or v = X/(t2-t1)   - Equation 4
 //
 // If max/base freq = 10kHz:  10kHz = (8/2)/T = 8/2T
 //    where 8 = QCAPCTL [UPPS] (Unit timeout - once every 8 edges)
-//		    2 = divide by 2 because QPOSCNT counts 2 edges per cycle (rising and falling)
-//		    T = time in seconds
+//            2 = divide by 2 because QPOSCNT counts 2 edges per cycle
+//                (rising and falling)
+//            T = time in seconds
 //            = t2-t1/(100MHz/128),  t2-t1= # of QCAPCLK cycles, and
-//		                  1 QCAPCLK cycle = 1/(100MHz/128)
-//										  = QCPRDLAT
+//                          1 QCAPCLK cycle = 1/(100MHz/128)
+//                                          = QCPRDLAT
 //
 // So: 10 kHz = 8(200MHz/128)/2(t2-t1)
-//      t2-t1 = 8(200MHz/128)/(10kHz*2) = (200MHz/128)/(2*10kHz/8)  - Equation 5
+//      t2-t1 = 8(200MHz/128)/(10kHz*2) = (200MHz/128)/(2*10kHz/8) - Equation 5
 //            = 625QCAPCLK cycles = maximum (t2-t1) = freqScaler_pr
 //
 // Divide both sides by (t2-t1), and:
 //          1 = 625/(t2-t1) = [(200MHz/128)/(2*10kHz/8)]/(t2-t1)
 //  Because (t2-t1) must be <625 (max).
 //              625/(t2-t1) < 1 for all frequencies less than max
-//    freq_pr = 625/(t2-t1) or [(200MHz/128)/(2*10kHz/8)]/(t2-t1)  - Equation 6
-// Now within velocity limits, to get back to original velocity equation, 
+//    freq_pr = 625/(t2-t1) or [(200MHz/128)/(2*10kHz/8)]/(t2-t1) - Equation 6
+// Now within velocity limits, to get back to original velocity equation,
 // Equation 1, multiply Equation 6 by 10 kHz:
 //  freqhz_fr (or velocity) = 10kHz*[200MHz/128)/(2*10kHz/8)]/(t2-t1)
 //                          = (200MHz/128)*8/[2(t2-t1)]
@@ -66,97 +68,145 @@
 // This file contains source for the freq calculation module.
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
 
-#include "F28x_Project.h"     // Device Headerfile and Examples Include File
-#include "Example_freqcal.h"    // Example specific include file
+//
+// Included Files
+//
+#include "F28x_Project.h"
+#include "Example_freqcal.h"
 
+//
+// FREQCAL_Init - Initialize EQEP1 configuration
+//
 void  FREQCAL_Init(void)
 {
+    EQep1Regs.QUPRD=2000000;          // Unit Timer for 100Hz at
+                                      // 200 MHz SYSCLKOUT
 
-	EQep1Regs.QUPRD=2000000;			// Unit Timer for 100Hz at 200 MHz SYSCLKOUT
+    EQep1Regs.QDECCTL.bit.QSRC=2;     // Up count mode (freq. measurement)
+    EQep1Regs.QDECCTL.bit.XCR=0;      // 2x resolution (cnt falling and
+                                      //                rising edges)
 
-	EQep1Regs.QDECCTL.bit.QSRC=2;		// Up count mode (freq. measurement)
-	EQep1Regs.QDECCTL.bit.XCR=0;        // 2x resolution (cnt falling and rising edges)
+    EQep1Regs.QEPCTL.bit.FREE_SOFT=2;
+    EQep1Regs.QEPCTL.bit.PCRM=00;     // QPOSCNT reset on index evnt
+    EQep1Regs.QEPCTL.bit.UTE=1;       // Unit Timer Enable
+    EQep1Regs.QEPCTL.bit.QCLM=1;      // Latch on unit time out
+    EQep1Regs.QPOSMAX=0xffffffff;
+    EQep1Regs.QEPCTL.bit.QPEN=1;      // QEP enable
 
-	EQep1Regs.QEPCTL.bit.FREE_SOFT=2;
-	EQep1Regs.QEPCTL.bit.PCRM=00;		// QPOSCNT reset on index evnt
-	EQep1Regs.QEPCTL.bit.UTE=1; 		// Unit Timer Enable
-	EQep1Regs.QEPCTL.bit.QCLM=1; 		// Latch on unit time out
-	EQep1Regs.QPOSMAX=0xffffffff;
-	EQep1Regs.QEPCTL.bit.QPEN=1; 		// QEP enable
-
-	EQep1Regs.QCAPCTL.bit.UPPS=3;   	// 1/8 for unit position
-	EQep1Regs.QCAPCTL.bit.CCPS=7;		// 1/128 for CAP clock
-	EQep1Regs.QCAPCTL.bit.CEN=1; 		// QEP Capture Enable
-
+    EQep1Regs.QCAPCTL.bit.UPPS=3;     // 1/8 for unit position
+    EQep1Regs.QCAPCTL.bit.CCPS=7;     // 1/128 for CAP clock
+    EQep1Regs.QCAPCTL.bit.CEN=1;      // QEP Capture Enable
 }
 
+//
+// FREQCAL_Calc - Perform Frequency calculations
+//
 void FREQCAL_Calc(FREQCAL *p)
 {
-     unsigned long tmp;
-   	 _iq newp,oldp;
+    unsigned long tmp;
+    _iq newp,oldp;
 
+//
 // Check unit Time out-event for speed calculation:
 // Unit Timer is configured for 100Hz in INIT function
-//**** Freq Calculation using QEP position counter ****//
 // For a more detailed explanation of the calculation, read
 // the description at the top of this file
+//
+    if(EQep1Regs.QFLG.bit.UTO==1)   // Unit Timeout event
+    {
+        //
+        // Differentiator
+        //
+        newp=EQep1Regs.QPOSLAT;    // Latched POSCNT value
+        oldp=p->oldpos;
 
-	if(EQep1Regs.QFLG.bit.UTO==1)                  // Unit Timeout event
-	{
-		/** Differentiator	**/
-	 	newp=EQep1Regs.QPOSLAT;                    // Latched POSCNT value
-		oldp=p->oldpos;
+        if (newp>oldp) // x2-x1 in v=(x2-x1)/T equation
+        {
+            tmp = newp - oldp;
+        }
+        else
+        {
+            tmp = (0xFFFFFFFF-oldp)+newp;
+        }
 
-    	if (newp>oldp)
-      		tmp = newp - oldp;                     // x2-x1 in v=(x2-x1)/T equation
-    	else
-      		tmp = (0xFFFFFFFF-oldp)+newp;
+        //
+        // p->freq_fr = (x2-x1)/(T*10KHz)
+        //
+        p->freq_fr = _IQdiv(tmp,p->freqScaler_fr);
+        tmp=p->freq_fr;
 
-		p->freq_fr = _IQdiv(tmp,p->freqScaler_fr); // p->freq_fr = (x2-x1)/(T*10KHz)
-		tmp=p->freq_fr;
+        if (tmp>=_IQ(1))// is freq greater than max freq (10KHz for this)?
+        {
+            p->freq_fr = _IQ(1);
+        }
+        else
+        {
+             p->freq_fr = tmp;
+        }
 
-		if (tmp>=_IQ(1))          // is freq greater than max freq (10KHz for this example)?
-	 		p->freq_fr = _IQ(1);
-		else
-	 		p->freq_fr = tmp;
+        //
+        // Q0 = Q0*GLOBAL_Q => _IQXmpy(), X = GLOBAL_Q
+        // p->freqhz_fr = (p->freq_fr)*10kHz = (x2-x1)/T
+        //
+        p->freqhz_fr = _IQmpy(p->BaseFreq,p->freq_fr);
 
-		p->freqhz_fr = _IQmpy(p->BaseFreq,p->freq_fr); 	// Q0 = Q0*GLOBAL_Q => _IQXmpy(), X = GLOBAL_Q
-		                                                // p->freqhz_fr = (p->freq_fr)*10kHz = (x2-x1)/T
+        //
+        // Update position counter
+        //
+        p->oldpos = newp;
 
-		// Update position counter
-    	p->oldpos = newp;
-		//=======================================
+        EQep1Regs.QCLR.bit.UTO=1;   // Clear __interrupt flag
+    }
 
-		EQep1Regs.QCLR.bit.UTO=1;					// Clear __interrupt flag
-	}
+    //
+    // Freq Calculation using QEP capture counter
+    //
+    if(EQep1Regs.QEPSTS.bit.UPEVNT==1)  // Unit Position Event
+    {
+        if(EQep1Regs.QEPSTS.bit.COEF==0)  // No Capture overflow
+        {
+            tmp=(unsigned long)EQep1Regs.QCPRDLAT;
+        }
+        else // Capture overflow, saturate the result
+        {
+            tmp=0xFFFF;
+        }
 
-//**** Freq Calculation using QEP capture counter ****//
-	if(EQep1Regs.QEPSTS.bit.UPEVNT==1)              // Unit Position Event
-	{
-		if(EQep1Regs.QEPSTS.bit.COEF==0)            // No Capture overflow
-			tmp=(unsigned long)EQep1Regs.QCPRDLAT;
-		else							            // Capture overflow, saturate the result
-			tmp=0xFFFF;
+        //
+        // p->freq_pr = X/[(t2-t1)*10KHz]
+        //
+        p->freq_pr = _IQdiv(p->freqScaler_pr,tmp);
+        tmp=p->freq_pr;
 
-		p->freq_pr = _IQdiv(p->freqScaler_pr,tmp);  // p->freq_pr = X/[(t2-t1)*10KHz]
-		tmp=p->freq_pr;
+        if (tmp>_IQ(1))
+        {
+             p->freq_pr = _IQ(1);
+        }
+        else
+        {
+             p->freq_pr = tmp;
+        }
 
-		if (tmp>_IQ(1))
-	 		p->freq_pr = _IQ(1);
-		else
-	 		p->freq_pr = tmp;
+        //
+        // Q0 = Q0*GLOBAL_Q => _IQXmpy(), X = GLOBAL_Q
+        // p->freqhz_pr =( p->freq_pr)*10kHz = X/(t2-t1)
+        //
+        p->freqhz_pr = _IQmpy(p->BaseFreq,p->freq_pr);
 
-		p->freqhz_pr = _IQmpy(p->BaseFreq,p->freq_pr); 	// Q0 = Q0*GLOBAL_Q => _IQXmpy(), X = GLOBAL_Q
-	                                                    // p->freqhz_pr =( p->freq_pr)*10kHz = X/(t2-t1)
-		EQep1Regs.QEPSTS.all=0x88;					    // Clear Unit position event flag
-												     	// Clear overflow error flag
-	}
-
+        //
+        // Clear Unit position event flag
+        // Clear overflow error flag
+        //
+        EQep1Regs.QEPSTS.all=0x88;
+    }
 }
 
+//
+// End of file
+//

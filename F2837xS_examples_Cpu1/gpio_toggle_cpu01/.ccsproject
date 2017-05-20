@@ -9,4 +9,5 @@
 	<rts value="libc.a"/>
 	<templateProperties value="id=com.ti.common.project.core.emptyProjectTemplate,"/>
 	<isTargetManual value="false"/>
+	<origin value="C:/ti/controlSUITE/device_support/F2837xS/v210/F2837xS_examples_Cpu1/gpio_toggle/cpu01/ccs"/>
 </projectOptions>

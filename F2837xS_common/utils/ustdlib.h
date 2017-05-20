@@ -1,44 +1,37 @@
-//########################################################################### 
-// 
-// FILE:   ustdlib.h 
-// 
+//###########################################################################
+//
+// FILE:   ustdlib.h
+//
 // TITLE:  Prototypes for simple standard library functions.
-// 
-//########################################################################### 
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+//
+//###########################################################################
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
 
-
 #ifndef __USTDLIB_H__
 #define __USTDLIB_H__
 
-//*****************************************************************************
 //
-// Include the standard C headers upon which these replacements are based.
+// Included Files
 //
-//*****************************************************************************
 #include <stdarg.h>
 #include <time.h>
 
-//*****************************************************************************
 //
 // If building with a C++ compiler, make all of the definitions in this header
 // have a C binding.
 //
-//*****************************************************************************
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-//*****************************************************************************
 //
-// Prototypes for the APIs.
+// Function Prototypes
 //
-//*****************************************************************************
 extern void ulocaltime(time_t timer, struct tm *tm);
 extern time_t umktime(struct tm *timeptr);
 extern int urand(void);
@@ -60,13 +53,15 @@ extern unsigned long int ustrtoul(const char * restrict nptr,
 extern int uvsnprintf(char * restrict s, size_t n,
                       const char * restrict format, va_list arg);
 
-//*****************************************************************************
 //
 // Mark the end of the C bindings section for C++ compilers.
 //
-//*****************************************************************************
 #ifdef __cplusplus
 }
 #endif
 
 #endif // __USTDLIB_H__
+
+//
+// End of file
+//

@@ -5,8 +5,8 @@
 // TITLE:  #defines used in Upp examples
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -14,12 +14,13 @@
 #ifndef F2837xS_UPP_DEFINES_H
 #define F2837xS_UPP_DEFINES_H
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
+//
+// Defines
+//
 #define uPP_TX_MSGRAM_ADDR 0x6C00
 #define uPP_TX_MSGRAM_SIZE 512
 
@@ -45,16 +46,12 @@ extern "C" {
 #define uPP_INT_EOWQ 0x800
 #define uPP_INT_EOLQ 0x1000
 
-//Write Mask to stop writing to control critical bit 
-//None
-
-
 #ifdef __cplusplus
 }
 #endif /* extern "C" */
 
 #endif   // - end of F2837xS_UPP_DEFINES_H
 
-//===========================================================================
-// End of file.
-//===========================================================================
+//
+// End of file
+//

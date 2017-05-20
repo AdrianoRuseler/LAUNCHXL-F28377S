@@ -1,7 +1,7 @@
 /*--------------------------------------------------------*/
 /* F02\Types.h                                            */
 /*                                                        */
-/* $Release Date: Fri Mar 11 15:58:35 CST 2016 $                                      */
+/* $Release Date: Tue Nov  1 15:35:23 CDT 2016 $                                      */
 /* $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -                                         */ 
 /*             http://www.ti.com/ ALL RIGHTS RESERVED $ */
 /*                                                        */
@@ -22,12 +22,16 @@
 /*****************************************************************************/
 /* GLOBAL DEFINITIONS                                                        */
 /*****************************************************************************/
-#if  (defined(__TMS470__) || defined(__TI_ARM__)) && (__TI_COMPILER_VERSION__ < 5002000)
-#error "F021 Flash API requires GCC language extensions. Use the -gcc option."
+#if ((defined(_TMS470) || defined(TI_ARM)) && (TI_COMPILER_VERSION_ < 5002000))
+#if !defined(_GNUC_)
+#error "F021 Flash API requires GCC language extensions. Use the –gcc option."
+#endif
 #endif
 
-#if (defined(__TMS320C28xx__)) && (__TI_COMPILER_VERSION__ < 6004000)
-#error "F021 Flash API requires GCC language extensions. Use the -gcc option."
+#if (defined(_TMS320C28xx) && __TI_COMPILER_VERSION_ < 6004000)
+#if !defined(_GNUC_)
+#error "F021 Flash API requires GCC language extensions. Use the –gcc option."
+#endif
 #endif
 
 

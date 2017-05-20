@@ -1,5 +1,9 @@
 ;//###########################################################################
+;//
+;// FILE: F2837xS_usDelay.asm
+;//
 ;// TITLE: Simple delay function
+;//
 ;// DESCRIPTION:
 ;// This is a simple delay function that can be used to insert a specified
 ;// delay into code.
@@ -30,15 +34,16 @@
 ;//  Or as follows (if count is less then 16-bits):
 ;//        MOV   ACC,#LoopCount
 ;//        LCR   _Delay
+;//
 ;//###########################################################################
-;// $TI Release: F2837xS Support Library v191 $
-;// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+;// $TI Release: F2837xS Support Library v210 $
+;// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 ;// $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 ;//             http://www.ti.com/ ALL RIGHTS RESERVED $
 ;//###########################################################################
 
        .def _F28x_usDelay
-       .sect "ramfuncs"
+       .sect ".TI.ramfunc"
 
         .global  __F28x_usDelay
 _F28x_usDelay:
@@ -55,4 +60,6 @@ _F28x_usDelay:
 ;
 ;
 
-
+;//
+;// End of file
+;//

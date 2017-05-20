@@ -5,8 +5,8 @@
 // TITLE:  #defines used in ADC examples
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -18,18 +18,28 @@
 extern "C" {
 #endif
 
+//
+// Defines
+//
+
+//
 //definitions for specifying an ADC
+//
 #define ADC_ADCA 0
 #define ADC_ADCB 1
 #define ADC_ADCC 2
 #define ADC_ADCD 3
 
+//
 //definitions for selecting ADC resolution
+//
 #define ADC_RESOLUTION_12BIT 0
 #define ADC_RESOLUTION_16BIT 1
 
+//
 //definitions for selecting ADC signal mode
 //(single-ended mode is only a valid mode for 12-bit resolution)
+//
 #define ADC_SIGNALMODE_SINGLE 0
 #define ADC_SIGNALMODE_DIFFERENTIAL 1
 
@@ -39,6 +49,6 @@ extern "C" {
 
 #endif   // - end of F2837xS_ADC_DEFINES_H
 
-//===========================================================================
-// End of file.
-//===========================================================================
+//
+// End of file
+//

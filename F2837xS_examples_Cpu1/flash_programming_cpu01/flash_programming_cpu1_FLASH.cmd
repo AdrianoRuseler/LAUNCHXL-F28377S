@@ -3,8 +3,8 @@
 // FILE:    flash_programming_cpu1_FLASH.cmd
 // TITLE:   Linker Command File For all F28X7x devices
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
@@ -99,21 +99,42 @@ SECTIONS
    .pinit              : > FLASHD,     PAGE = 0
    .text               : >> FLASHD | FLASHE      PAGE = 0
    codestart           : > BEGIN	PAGE = 0
+
+#ifdef __TI_COMPILER_VERSION__
+    #if __TI_COMPILER_VERSION__ >= 15009000
+        GROUP
+        {
+            .TI.ramfunc
+            { -l F021_API_F2837xS_FPU32.lib}
+         
+        } LOAD = FLASHD,
+          RUN  = RAMLS03, 
+          LOAD_START(_RamfuncsLoadStart),
+          LOAD_SIZE(_RamfuncsLoadSize),
+          LOAD_END(_RamfuncsLoadEnd),
+          RUN_START(_RamfuncsRunStart),
+          RUN_SIZE(_RamfuncsRunSize),
+          RUN_END(_RamfuncsRunEnd),
+          PAGE = 0    
+    #else
+        GROUP
+        {
+            ramfuncs
+            { -l F021_API_F2837xS_FPU32.lib}
+         
+        } LOAD = FLASHD,
+          RUN  = RAMLS03, 
+          LOAD_START(_RamfuncsLoadStart),
+          LOAD_SIZE(_RamfuncsLoadSize),
+          LOAD_END(_RamfuncsLoadEnd),
+          RUN_START(_RamfuncsRunStart),
+          RUN_SIZE(_RamfuncsRunSize),
+          RUN_END(_RamfuncsRunEnd),
+          PAGE = 0    
+    #endif
+#endif
    
-    GROUP
-    {
-        ramfuncs
-        { -l F021_API_F2837xS_FPU32.lib}
-     
-    } LOAD = FLASHD,
-      RUN  = RAMLS03, 
-      LOAD_START(_RamfuncsLoadStart),
-      LOAD_SIZE(_RamfuncsLoadSize),
-      LOAD_END(_RamfuncsLoadEnd),
-      RUN_START(_RamfuncsRunStart),
-      RUN_SIZE(_RamfuncsRunSize),
-      RUN_END(_RamfuncsRunEnd),
-      PAGE = 0
+
 
    /* Allocate uninitalized data sections: */
    .stack              : > RAMM1       PAGE = 1

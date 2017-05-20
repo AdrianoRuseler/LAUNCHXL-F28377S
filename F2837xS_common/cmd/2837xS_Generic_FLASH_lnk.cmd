@@ -14,7 +14,7 @@ PAGE 0 :  /* Program Memory */
    RAMLS3      		: origin = 0x009800, length = 0x000800
    RAMLS4      		: origin = 0x00A000, length = 0x000800
    RESET           	: origin = 0x3FFFC0, length = 0x000002
-   
+
    /* Flash sectors */
    FLASHA           : origin = 0x080002, length = 0x001FFE	/* on-chip Flash */
    FLASHB           : origin = 0x082000, length = 0x002000	/* on-chip Flash */
@@ -29,7 +29,7 @@ PAGE 0 :  /* Program Memory */
    FLASHK           : origin = 0x0B8000, length = 0x002000	/* on-chip Flash */
    FLASHL           : origin = 0x0BA000, length = 0x002000	/* on-chip Flash */
    FLASHM           : origin = 0x0BC000, length = 0x002000	/* on-chip Flash */
-   FLASHN           : origin = 0x0BE000, length = 0x002000	/* on-chip Flash */   
+   FLASHN           : origin = 0x0BE000, length = 0x002000	/* on-chip Flash */
 
 PAGE 1 : /* Data Memory */
          /* Memory (RAM/FLASH) blocks can be moved to PAGE0 for program allocation */
@@ -52,9 +52,7 @@ PAGE 1 : /* Data Memory */
    RAMGS9      : origin = 0x015000, length = 0x001000
    RAMGS10     : origin = 0x016000, length = 0x001000
    RAMGS11     : origin = 0x017000, length = 0x001000
-
 }
-
 
 SECTIONS
 {
@@ -63,16 +61,7 @@ SECTIONS
    .pinit              : > FLASHB,     PAGE = 0, ALIGN(4)
    .text               : >> FLASHB | FLASHC | FLASHD | FLASHE      PAGE = 0, ALIGN(4)
    codestart           : > BEGIN       PAGE = 0, ALIGN(4)
-   ramfuncs            : LOAD = FLASHD,
-                         RUN = RAMLS0 | RAMLS1 | RAMLS2 |RAMLS3,
-                         LOAD_START(_RamfuncsLoadStart),
-                         LOAD_SIZE(_RamfuncsLoadSize),
-                         LOAD_END(_RamfuncsLoadEnd),
-                         RUN_START(_RamfuncsRunStart),
-                         RUN_SIZE(_RamfuncsRunSize),
-                         RUN_END(_RamfuncsRunEnd),
-                         PAGE = 0, ALIGN(4)
-						 
+
    /* Allocate uninitalized data sections: */
    .stack              : > RAMM1        PAGE = 1
    .ebss               : >> RAMLS5 | RAMGS0 | RAMGS1       PAGE = 1
@@ -81,11 +70,11 @@ SECTIONS
    /* Initalized sections go in Flash */
    .econst             : >> FLASHF | FLASHG | FLASHH      PAGE = 0, ALIGN(4)
    .switch             : > FLASHB      PAGE = 0, ALIGN(4)
-   
+
    .reset              : > RESET,     PAGE = 0, TYPE = DSECT /* not used, */
 
-#ifdef __TI_COMPILER_VERSION
-   #if __TI_COMPILER_VERSION >= 15009000
+#ifdef __TI_COMPILER_VERSION__
+   #if __TI_COMPILER_VERSION__ >= 15009000
     .TI.ramfunc : {} LOAD = FLASHD,
                          RUN = RAMLS0 | RAMLS1 | RAMLS2 |RAMLS3,
                          LOAD_START(_RamfuncsLoadStart),
@@ -95,13 +84,23 @@ SECTIONS
                          RUN_SIZE(_RamfuncsRunSize),
                          RUN_END(_RamfuncsRunEnd),
                          PAGE = 0, ALIGN(4)
+   #else
+   ramfuncs            : LOAD = FLASHD,
+                         RUN = RAMLS0 | RAMLS1 | RAMLS2 |RAMLS3,
+                         LOAD_START(_RamfuncsLoadStart),
+                         LOAD_SIZE(_RamfuncsLoadSize),
+                         LOAD_END(_RamfuncsLoadEnd),
+                         RUN_START(_RamfuncsRunStart),
+                         RUN_SIZE(_RamfuncsRunSize),
+                         RUN_END(_RamfuncsRunEnd),
+                         PAGE = 0, ALIGN(4)   
    #endif
 #endif
-   
+
    ramgs0           : > RAMGS0,    PAGE = 1
    ramgs1           : > RAMGS1,    PAGE = 1
-   
-   /* The following section definitions are for SDFM examples */		
+
+   /* The following section definitions are for SDFM examples */
    Filter1_RegsFile : > RAMGS1,	PAGE = 1, fill=0x1111
    Filter2_RegsFile : > RAMGS2,	PAGE = 1, fill=0x2222
    Filter3_RegsFile : > RAMGS3,	PAGE = 1, fill=0x3333

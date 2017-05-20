@@ -28,8 +28,8 @@
 		<link>
 			<name>F2837xS_Adc.c</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/F2837xS_common/source/F2837xS_Adc.c</locationURI>
-		</link>    
+			<locationURI>PARENT-4-ORIGINAL_PROJECT_ROOT/F2837xS_common/source/F2837xS_Adc.c</locationURI>
+		</link>
 		<link>
 			<name>F2837xS_CodeStartBranch.asm</name>
 			<type>1</type>
@@ -68,7 +68,7 @@
 		<link>
 			<name>F2837xS_usDelay.asm</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/F2837xS_common/source/F2837xS_usDelay.asm</locationURI>
+			<locationURI>PARENT-4-ORIGINAL_PROJECT_ROOT/F2837xS_common/source/F2837xS_usDelay.asm</locationURI>
 		</link>
 		<link>
 			<name>adc_soc_epwm_cpu01.c</name>
@@ -79,7 +79,11 @@
 	<variableList>
 		<variable>
 			<name>INSTALLROOT_F2837XS</name>
-			<value>$%7BPARENT-4-PROJECT_LOC%7D</value>
+			<value>$%7BPARENT-4-ORIGINAL_PROJECT_ROOT%7D</value>
+		</variable>
+		<variable>
+			<name>ORIGINAL_PROJECT_ROOT</name>
+			<value>file:/C:/ti/controlSUITE/device_support/F2837xS/v210/F2837xS_examples_Cpu1/adc_soc_epwm/cpu01/ccs</value>
 		</variable>
 	</variableList>
 </projectDescription>

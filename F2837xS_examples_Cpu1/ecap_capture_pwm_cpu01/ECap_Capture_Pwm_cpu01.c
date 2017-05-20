@@ -1,5 +1,7 @@
 //###########################################################################
+//
 // FILE:    ECap_Capture_Pwm_cpu01.c
+//
 // TITLE:   Capture EPWM3.
 //
 //! \addtogroup cpu01_example_list
@@ -21,107 +23,144 @@
 //! \b Watch \b Variables \n
 //! - \b ECap1PassCount - Successful captures
 //! - \b ECap1IntCount - Interrupt counts
+//!
 //
 //###########################################################################
-// $TI Release: F2837xS Support Library v191 $
-// $Release Date: Fri Mar 11 15:58:35 CST 2016 $
+// $TI Release: F2837xS Support Library v210 $
+// $Release Date: Tue Nov  1 15:35:23 CDT 2016 $
 // $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -
 //             http://www.ti.com/ ALL RIGHTS RESERVED $
 //###########################################################################
 
-#include "F28x_Project.h"     // Device Headerfile and Examples Include File
+//
+// Included Files
+//
+#include "F28x_Project.h"
 
+//
+// Defines
+//
 // Configure the start/end period for the timer
-#define PWM3_TIMER_MIN     10                    
+#define PWM3_TIMER_MIN     10
 #define PWM3_TIMER_MAX     8000
+// To keep track of which way the timer value is moving
+#define EPWM_TIMER_UP   1
+#define EPWM_TIMER_DOWN 0
 
-// Prototype statements for functions found within this file.
+//
+// Globals
+//
+Uint32  ECap1IntCount;
+Uint32  ECap1PassCount;
+Uint32  EPwm3TimerDirection;
+
+//
+// Function Prototypes
+//
 __interrupt void ecap1_isr(void);
 void InitECapture(void);
 void InitEPwmTimer(void);
 void Fail(void);
 
-// Global variables used in this example
-Uint32  ECap1IntCount;
-Uint32  ECap1PassCount;
-Uint32  EPwm3TimerDirection;
-
-// To keep track of which way the timer value is moving
-#define EPWM_TIMER_UP   1
-#define EPWM_TIMER_DOWN 0
-
+//
+// Main
+//
 void main(void)
 {
-
+//
 // Step 1. Initialize System Control:
 // PLL, WatchDog, enable Peripheral Clocks
 // This example function is found in the F2837xS_SysCtrl.c file.
+//
    InitSysCtrl();
 
-// Step 2. Initialize GPIO: 
+//
+// Step 2. Initialize GPIO:
 // This example function is found in the F2837xS_Gpio.c file and
 // illustrates how to set the GPIO to its default state.
-// InitGpio();  // Skipped for this example  
-   
+//
    InitEPwm3Gpio();
    InitECap1Gpio(19);
    GPIO_SetupPinOptions(19, GPIO_INPUT, GPIO_ASYNC);
 
+//
 // Step 3. Clear all __interrupts and initialize PIE vector table:
-// Disable CPU __interrupts 
+// Disable CPU __interrupts
+//
    DINT;
 
+//
 // Initialize the PIE control registers to their default state.
 // The default state is all PIE __interrupts disabled and flags
-// are cleared.  
+// are cleared.
 // This function is found in the F2837xS_PieCtrl.c file.
+//
    InitPieCtrl();
-   
+
+//
 // Disable CPU __interrupts and clear all CPU __interrupt flags:
+//
    IER = 0x0000;
    IFR = 0x0000;
 
-// Initialize the PIE vector table with pointers to the shell Interrupt 
-// Service Routines (ISR).  
+//
+// Initialize the PIE vector table with pointers to the shell Interrupt
+// Service Routines (ISR).
 // This will populate the entire table, even if the __interrupt
 // is not used in this example.  This is useful for debug purposes.
 // The shell ISR routines are found in F2837xS_DefaultIsr.c.
 // This function is found in F2837xS_PieVect.c.
+//
    InitPieVectTable();
 
+//
 // Interrupts that are used in this example are re-mapped to
-// ISR functions found within this file.  
+// ISR functions found within this file.
+//
    EALLOW;  // This is needed to write to EALLOW protected registers
    PieVectTable.ECAP1_INT = &ecap1_isr;
    EDIS;    // This is needed to disable write to EALLOW protected registers
 
+//
 // Step 4. Initialize the Device Peripherals:
+//
    InitEPwmTimer();    // For this example, only initialize the ePWM Timers
    InitECapture();
 
-// Step 5. User specific code, enable __interrupts:
-
-// Initialize counters:   
+//
+// Initialize counters:
+//
    ECap1IntCount = 0;
    ECap1PassCount = 0;
-   
+
+//
 // Enable CPU INT4 which is connected to ECAP1-4 INT:
+//
    IER |= M_INT4;
 
+//
 // Enable eCAP INTn in the PIE: Group 3 __interrupt 1-6
+//
    PieCtrlRegs.PIEIER4.bit.INTx1 = 1;
 
+//
 // Enable global Interrupts and higher priority real-time debug events:
+//
    EINT;   // Enable Global __interrupt INTM
    ERTM;   // Enable Global realtime __interrupt DBGM
 
-// Step 6. IDLE loop. Just sit and loop forever (optional):
+//
+// Step 5. IDLE loop. Just sit and loop forever (optional):
+//
    for(;;)
    {
       asm("          NOP");
    }
-} 
+}
 
+//
+// InitEPwmTimer - Initialize ePWM3 timer configuration
+//
 void InitEPwmTimer()
 {
    EALLOW;
@@ -132,75 +171,86 @@ void InitEPwmTimer()
    EPwm3Regs.TBPRD = PWM3_TIMER_MIN;
    EPwm3Regs.TBPHS.all = 0x00000000;
    EPwm3Regs.AQCTLA.bit.PRD = AQ_TOGGLE;      // Toggle on PRD
-   
+
+   //
    // TBCLK = SYSCLKOUT
+   //
    EPwm3Regs.TBCTL.bit.HSPCLKDIV = 1;
    EPwm3Regs.TBCTL.bit.CLKDIV = 0;
 
-   EPwm3TimerDirection = EPWM_TIMER_UP; 
-   
+   EPwm3TimerDirection = EPWM_TIMER_UP;
+
    EALLOW;
    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;
    EDIS;
 }
 
+//
+// InitECapture - Initialize ECAP1 configurations
+//
 void InitECapture()
 {
-   ECap1Regs.ECEINT.all = 0x0000;             // Disable all capture __interrupts
-   ECap1Regs.ECCLR.all = 0xFFFF;              // Clear all CAP __interrupt flags
-   ECap1Regs.ECCTL1.bit.CAPLDEN = 0;          // Disable CAP1-CAP4 register loads
-   ECap1Regs.ECCTL2.bit.TSCTRSTOP = 0;        // Make sure the counter is stopped
-   
-   // Configure peripheral registers
-   ECap1Regs.ECCTL2.bit.CONT_ONESHT = 1;      // One-shot
-   ECap1Regs.ECCTL2.bit.STOP_WRAP = 3;        // Stop at 4 events
-   ECap1Regs.ECCTL1.bit.CAP1POL = 1;          // Falling edge
-   ECap1Regs.ECCTL1.bit.CAP2POL = 0;          // Rising edge
-   ECap1Regs.ECCTL1.bit.CAP3POL = 1;          // Falling edge
-   ECap1Regs.ECCTL1.bit.CAP4POL = 0;          // Rising edge
-   ECap1Regs.ECCTL1.bit.CTRRST1 = 1;          // Difference operation         
-   ECap1Regs.ECCTL1.bit.CTRRST2 = 1;          // Difference operation         
-   ECap1Regs.ECCTL1.bit.CTRRST3 = 1;          // Difference operation         
-   ECap1Regs.ECCTL1.bit.CTRRST4 = 1;          // Difference operation         
-   ECap1Regs.ECCTL2.bit.SYNCI_EN = 1;         // Enable sync in
-   ECap1Regs.ECCTL2.bit.SYNCO_SEL = 0;        // Pass through
-   ECap1Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable capture units
+   ECap1Regs.ECEINT.all = 0x0000;          // Disable all capture __interrupts
+   ECap1Regs.ECCLR.all = 0xFFFF;           // Clear all CAP __interrupt flags
+   ECap1Regs.ECCTL1.bit.CAPLDEN = 0;       // Disable CAP1-CAP4 register loads
+   ECap1Regs.ECCTL2.bit.TSCTRSTOP = 0;     // Make sure the counter is stopped
 
-   ECap1Regs.ECCTL2.bit.TSCTRSTOP = 1;        // Start Counter
-   ECap1Regs.ECCTL2.bit.REARM = 1;            // arm one-shot
-   ECap1Regs.ECCTL1.bit.CAPLDEN = 1;          // Enable CAP1-CAP4 register loads
-   ECap1Regs.ECEINT.bit.CEVT4 = 1;            // 4 events = __interrupt
+   //
+   // Configure peripheral registers
+   //
+   ECap1Regs.ECCTL2.bit.CONT_ONESHT = 1;   // One-shot
+   ECap1Regs.ECCTL2.bit.STOP_WRAP = 3;     // Stop at 4 events
+   ECap1Regs.ECCTL1.bit.CAP1POL = 1;       // Falling edge
+   ECap1Regs.ECCTL1.bit.CAP2POL = 0;       // Rising edge
+   ECap1Regs.ECCTL1.bit.CAP3POL = 1;       // Falling edge
+   ECap1Regs.ECCTL1.bit.CAP4POL = 0;       // Rising edge
+   ECap1Regs.ECCTL1.bit.CTRRST1 = 1;       // Difference operation
+   ECap1Regs.ECCTL1.bit.CTRRST2 = 1;       // Difference operation
+   ECap1Regs.ECCTL1.bit.CTRRST3 = 1;       // Difference operation
+   ECap1Regs.ECCTL1.bit.CTRRST4 = 1;       // Difference operation
+   ECap1Regs.ECCTL2.bit.SYNCI_EN = 1;      // Enable sync in
+   ECap1Regs.ECCTL2.bit.SYNCO_SEL = 0;     // Pass through
+   ECap1Regs.ECCTL1.bit.CAPLDEN = 1;       // Enable capture units
+
+   ECap1Regs.ECCTL2.bit.TSCTRSTOP = 1;     // Start Counter
+   ECap1Regs.ECCTL2.bit.REARM = 1;         // arm one-shot
+   ECap1Regs.ECCTL1.bit.CAPLDEN = 1;       // Enable CAP1-CAP4 register loads
+   ECap1Regs.ECEINT.bit.CEVT4 = 1;         // 4 events = __interrupt
 }
 
+//
+// ecap1_isr - ECAP1 ISR
+//             ECap runs twice as fast on F2837xS so multiplier
+//             was increased from x2 to x4 and the fudge factor was
+//             increased from 1 to 4.
+//              Cap input is syc'ed to SYSCLKOUT so there may be
+//              a +/- 1 cycle variation
+//
 __interrupt void ecap1_isr(void)
 {
-   //ECap runs twice as fast on F2837xS so multiplier
-   //was increased from x2 to x4 and the fudge factor was
-   //increased from 1 to 4. 
-
-   // Cap input is syc'ed to SYSCLKOUT so there may be
-   // a +/- 1 cycle variation
-    
-   if(ECap1Regs.CAP2 > EPwm3Regs.TBPRD*4+4 || ECap1Regs.CAP2 < EPwm3Regs.TBPRD*4-4)
+   if(ECap1Regs.CAP2 > EPwm3Regs.TBPRD*4+4 ||
+      ECap1Regs.CAP2 < EPwm3Regs.TBPRD*4-4)
    {
        Fail();
    }
 
-   if(ECap1Regs.CAP3 > EPwm3Regs.TBPRD*4+4 || ECap1Regs.CAP3 < EPwm3Regs.TBPRD*4-4)
+   if(ECap1Regs.CAP3 > EPwm3Regs.TBPRD*4+4 ||
+      ECap1Regs.CAP3 < EPwm3Regs.TBPRD*4-4)
    {
        Fail();
    }
-   
-   if(ECap1Regs.CAP4 > EPwm3Regs.TBPRD*4+4 || ECap1Regs.CAP4 < EPwm3Regs.TBPRD*4-4)
+
+   if(ECap1Regs.CAP4 > EPwm3Regs.TBPRD*4+4 ||
+      ECap1Regs.CAP4 < EPwm3Regs.TBPRD*4-4)
    {
        Fail();
-   }   
+   }
 
    ECap1IntCount++;
 
    if(EPwm3TimerDirection == EPWM_TIMER_UP)
    {
-        if(EPwm3Regs.TBPRD < PWM3_TIMER_MAX) 
+        if(EPwm3Regs.TBPRD < PWM3_TIMER_MAX)
         {
            EPwm3Regs.TBPRD++;
         }
@@ -212,7 +262,7 @@ __interrupt void ecap1_isr(void)
    }
    else
    {
-        if(EPwm3Regs.TBPRD > PWM3_TIMER_MIN) 
+        if(EPwm3Regs.TBPRD > PWM3_TIMER_MIN)
         {
            EPwm3Regs.TBPRD--;
         }
@@ -221,7 +271,7 @@ __interrupt void ecap1_isr(void)
            EPwm3TimerDirection = EPWM_TIMER_UP;
            EPwm3Regs.TBPRD++;
         }
-   }   
+   }
 
    ECap1PassCount++;
 
@@ -229,15 +279,20 @@ __interrupt void ecap1_isr(void)
    ECap1Regs.ECCLR.bit.INT = 1;
    ECap1Regs.ECCTL2.bit.REARM = 1;
 
+   //
    // Acknowledge this __interrupt to receive more __interrupts from group 4
+   //
    PieCtrlRegs.PIEACK.all = PIEACK_GROUP4;
 }
 
+//
+// Fail - Function that halts debugger
+//
 void Fail()
 {
    asm("   ESTOP0");
 }
 
-//===========================================================================
-// No more.
-//===========================================================================
+//
+// End of file
+//

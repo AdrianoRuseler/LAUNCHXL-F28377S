@@ -1,7 +1,7 @@
 /*--------------------------------------------------------*/
 /* F021\F021_F2837xS_C28x.h                              */
 /*                                                        */
-/* $Release Date: Fri Mar 11 15:58:35 CST 2016 $                        */
+/* $Release Date: Tue Nov  1 15:35:23 CDT 2016 $                        */
 /* $Copyright: Copyright (C) 2014-2016 Texas Instruments Incorporated -                  */ 
 /*             http://www.ti.com/ ALL RIGHTS RESERVED $ */
 /*                                                        */
