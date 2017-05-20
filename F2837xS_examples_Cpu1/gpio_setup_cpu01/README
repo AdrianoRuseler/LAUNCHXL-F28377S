@@ -1,19 +1,16 @@
-// TITLE:   Device GPIO Setup
-//
-//! \addtogroup cpu01_example_list
-//! <h1> Device GPIO Setup (GpioSetup)</h1>
-//!
-//! Configures the F2837xS GPIO into two different configurations
-//! This code is verbose to illustrate how the GPIO could be setup.
-//! In a real application, lines of code can be combined for improved
-//! code size and efficiency.
-//!
-//! This example only sets-up the GPIO. Nothing is actually done with
-//! the pins after setup.
-//!
-//! \b In \b general: \n
-//!  - All pullup resistors are enabled.  For ePWMs this may not be desired.
-//!  - Input qual for communication ports (eCAN, SPI, SCI, I2C) is asynchronous
-//!  - Input qual for Trip pins (TZ) is asynchronous
-//!  - Input qual for eCAP and eQEP signals is synch to SYSCLKOUT
-//!  - Input qual for some I/O's and __interrupts may have a sampling window
+Device GPIO Setup (GpioSetup)
+
+ Configures the F2837xS GPIO into two different configurations.
+ This code is verbose to illustrate how the GPIO could be setup.
+In a real application, lines of code can be combined for improved
+code size and efficiency.
+
+This example only sets-up the GPIO. Nothing is actually done with
+the pins after setup.
+
+ \b In \b general: 
+  - All pullup resistors are enabled.  For ePWMs this may not be desired.
+  - Input qual for communication ports (eCAN, SPI, SCI, I2C) is asynchronous
+  - Input qual for Trip pins (TZ) is asynchronous
+  - Input qual for eCAP and eQEP signals is synch to SYSCLKOUT
+  - Input qual for some I/O's and __interrupts may have a sampling window
