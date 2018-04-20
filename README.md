@@ -16,5 +16,3 @@ http://software-dl.ti.com/codegen/non-esd/downloads/download.htm#C2000
 ## C2000Ware 
 http://www.ti.com/tool/C2000WARE
 
-## F28377S LaunchPad: Project 0
-https://www.youtube.com/watch?v=OVPCUFkAD9M
