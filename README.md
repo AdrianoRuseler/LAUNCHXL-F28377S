@@ -13,8 +13,8 @@ http://processors.wiki.ti.com/index.php/Download_CCS
 ## C2000 Code Generation Tools Downloads
 http://software-dl.ti.com/codegen/non-esd/downloads/download.htm#C2000
 
-## controlSUITE 
-http://www.ti.com/tool/controlsuite
+## C2000Ware 
+http://www.ti.com/tool/C2000WARE
 
 ## F28377S LaunchPad: Project 0
 https://www.youtube.com/watch?v=OVPCUFkAD9M
