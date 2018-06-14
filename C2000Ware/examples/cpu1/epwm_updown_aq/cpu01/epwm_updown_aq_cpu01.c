@@ -61,25 +61,40 @@
 #include "F28x_Project.h"
 
 //
-// Defines
+// Defines LAUNCHXL-F28377S SYSCLKOUT = 200MHz
 //
-#define EPWM1_TIMER_TBPRD  2000  // Period register
-#define EPWM1_MAX_CMPA     1950
-#define EPWM1_MIN_CMPA       50
-#define EPWM1_MAX_CMPB     1950
-#define EPWM1_MIN_CMPB       50
 
-#define EPWM2_TIMER_TBPRD  2000  // Period register
+
+// #define EPWMCLK
+
+#define FCLK       100000000L
+#define FS_CONV      19980L
+#define TIMER_PWM (unsigned int)(FCLK/(2*FS_CONV))
+
+
+#define EPWM2_TIMER_TBPRD  TIMER_PWM  // Period register
 #define EPWM2_MAX_CMPA     1950
 #define EPWM2_MIN_CMPA       50
 #define EPWM2_MAX_CMPB     1950
 #define EPWM2_MIN_CMPB       50
 
-#define EPWM3_TIMER_TBPRD  2000  // Period register
-#define EPWM3_MAX_CMPA      950
-#define EPWM3_MIN_CMPA       50
-#define EPWM3_MAX_CMPB     1950
-#define EPWM3_MIN_CMPB     1050
+#define EPWM6_TIMER_TBPRD  2000  // Period register
+#define EPWM6_MAX_CMPA     1950
+#define EPWM6_MIN_CMPA       50
+#define EPWM6_MAX_CMPB     1950
+#define EPWM6_MIN_CMPB       50
+
+#define EPWM7_TIMER_TBPRD  2000  // Period register
+#define EPWM7_MAX_CMPA     1950
+#define EPWM7_MIN_CMPA       50
+#define EPWM7_MAX_CMPB     1950
+#define EPWM7_MIN_CMPB       50
+
+#define EPWM8_TIMER_TBPRD  2000  // Period register
+#define EPWM8_MAX_CMPA     1950
+#define EPWM8_MIN_CMPA       50
+#define EPWM8_MAX_CMPB     1950
+#define EPWM8_MIN_CMPB       50
 
 #define EPWM_CMP_UP           1
 #define EPWM_CMP_DOWN         0
@@ -99,19 +114,23 @@ typedef struct
     Uint16 EPwmMinCMPB;
 }EPWM_INFO;
 
-EPWM_INFO epwm1_info;
-EPWM_INFO epwm2_info;
-EPWM_INFO epwm3_info;
 
+EPWM_INFO epwm2_info;
+EPWM_INFO epwm6_info;
+EPWM_INFO epwm7_info;
+EPWM_INFO epwm8_info;
 //
 // Function Prototypes
 //
-void InitEPwm1Example(void);
+
 void InitEPwm2Example(void);
-void InitEPwm3Example(void);
-__interrupt void epwm1_isr(void);
+void InitEPwm6Example(void);
+void InitEPwm7Example(void);
+void InitEPwm8Example(void);
 __interrupt void epwm2_isr(void);
-__interrupt void epwm3_isr(void);
+__interrupt void epwm6_isr(void);
+__interrupt void epwm7_isr(void);
+__interrupt void epwm8_isr(void);
 void update_compare(EPWM_INFO*);
 
 //
@@ -134,19 +153,23 @@ void main(void)
 //    InitGpio();
 
 //
-// enable PWM1, PWM2 and PWM3
+// enable PWM2, PWM6, PWM7 and PWM8
 //
-    CpuSysRegs.PCLKCR2.bit.EPWM1=1;
+
     CpuSysRegs.PCLKCR2.bit.EPWM2=1;
-    CpuSysRegs.PCLKCR2.bit.EPWM3=1;
+    CpuSysRegs.PCLKCR2.bit.EPWM6=1;
+    CpuSysRegs.PCLKCR2.bit.EPWM7=1;
+    CpuSysRegs.PCLKCR2.bit.EPWM8=1;
 
 //
-// For this case just init GPIO pins for ePWM1, ePWM2, ePWM3
+// For this case just init GPIO pins for PWM2, PWM6, PWM7 and PWM8
 // These functions are in the F2837xS_EPwm.c file
 //
-    InitEPwm1Gpio();
-    InitEPwm2Gpio();
-    InitEPwm3Gpio();
+
+    InitEPwm2Gpio(); //
+    InitEPwm6Gpio();
+    InitEPwm7Gpio();
+    InitEPwm8Gpio();
 
 //
 // Step 3. Clear all interrupts and initialize PIE vector table:
@@ -183,9 +206,10 @@ void main(void)
 // ISR functions found within this file.
 //
     EALLOW; // This is needed to write to EALLOW protected registers
-    PieVectTable.EPWM1_INT = &epwm1_isr;
     PieVectTable.EPWM2_INT = &epwm2_isr;
-    PieVectTable.EPWM3_INT = &epwm3_isr;
+    PieVectTable.EPWM6_INT = &epwm6_isr;
+    PieVectTable.EPWM7_INT = &epwm7_isr;
+    PieVectTable.EPWM8_INT = &epwm8_isr;
     EDIS;   // This is needed to disable write to EALLOW protected registers
 
 //
@@ -194,11 +218,10 @@ void main(void)
     EALLOW;
     CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 0;
     EDIS;
-
-    InitEPwm1Example();
     InitEPwm2Example();
-    InitEPwm3Example();
-
+    InitEPwm6Example();
+    InitEPwm7Example();
+    InitEPwm8Example();
     EALLOW;
     CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;
     EDIS;
@@ -215,9 +238,11 @@ void main(void)
 //
 // Enable EPWM INTn in the PIE: Group 3 interrupt 1-3
 //
-    PieCtrlRegs.PIEIER3.bit.INTx1 = 1;
+
     PieCtrlRegs.PIEIER3.bit.INTx2 = 1;
-    PieCtrlRegs.PIEIER3.bit.INTx3 = 1;
+    PieCtrlRegs.PIEIER3.bit.INTx6 = 1; // ePWM6
+    PieCtrlRegs.PIEIER3.bit.INTx7 = 1; // ePWM7
+    PieCtrlRegs.PIEIER3.bit.INTx8 = 1; // ePWM8
 
 //
 // Enable global Interrupts and higher priority real-time debug events:
@@ -234,26 +259,6 @@ void main(void)
     }
 }
 
-//
-// epwm1_isr - EPWM1 ISR
-//
-__interrupt void epwm1_isr(void)
-{
-    //
-    // Update the CMPA and CMPB values
-    //
-    update_compare(&epwm1_info);
-
-    //
-    // Clear INT flag for this timer
-    //
-    EPwm1Regs.ETCLR.bit.INT = 1;
-
-    //
-    // Acknowledge this interrupt to receive more interrupts from group 3
-    //
-    PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
-}
 
 //
 // epwm2_isr - EPWM2 ISR
@@ -276,20 +281,21 @@ __interrupt void epwm2_isr(void)
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
 }
 
+
 //
-// epwm3_isr - EPWM3 ISR
+// epwm6_isr - EPWM6 ISR
 //
-__interrupt void epwm3_isr(void)
+__interrupt void epwm6_isr(void)
 {
     //
     // Update the CMPA and CMPB values
     //
-    update_compare(&epwm3_info);
+    update_compare(&epwm6_info);
 
     //
     // Clear INT flag for this timer
     //
-    EPwm3Regs.ETCLR.bit.INT = 1;
+    EPwm6Regs.ETCLR.bit.INT = 1;
 
     //
     // Acknowledge this interrupt to receive more interrupts from group 3
@@ -298,75 +304,40 @@ __interrupt void epwm3_isr(void)
 }
 
 //
-// InitEPwm1Example - Initialize EPWM1 configuration
+// epwm7_isr - EPWM7 ISR
 //
-void InitEPwm1Example()
+__interrupt void epwm7_isr(void)
 {
     //
-    // Setup TBCLK
+    // Update the CMPA and CMPB values
     //
-    EPwm1Regs.TBPRD = EPWM1_TIMER_TBPRD;       // Set timer period 801 TBCLKs
-    EPwm1Regs.TBPHS.bit.TBPHS = 0x0000;        // Phase is 0
-    EPwm1Regs.TBCTR = 0x0000;                  // Clear counter
+    update_compare(&epwm7_info);
 
     //
-    // Set Compare values
+    // Clear INT flag for this timer
     //
-    EPwm1Regs.CMPA.bit.CMPA = EPWM1_MIN_CMPA;    // Set compare A value
-    EPwm1Regs.CMPB.bit.CMPB = EPWM1_MAX_CMPB;    // Set Compare B value
+    EPwm7Regs.ETCLR.bit.INT = 1;
 
     //
-    // Setup counter mode
+    // Acknowledge this interrupt to receive more interrupts from group 3
     //
-    EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // Count up and down
-    EPwm1Regs.TBCTL.bit.PHSEN = TB_DISABLE;        // Disable phase loading
-    EPwm1Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;       // Clock ratio to SYSCLKOUT
-    EPwm1Regs.TBCTL.bit.CLKDIV = TB_DIV1;
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
+}
 
-    //
-    // Setup shadowing
-    //
-    EPwm1Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
-    EPwm1Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
-    EPwm1Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // Load on Zero
-    EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+//
+// epwm8_isr - EPWM8 ISR
+//
+__interrupt void epwm8_isr(void)
+{
 
-    //
-    // Set actions
-    //
-    EPwm1Regs.AQCTLA.bit.CAU = AQ_SET;            // Set PWM1A on event A, up
-                                                  // count
-    EPwm1Regs.AQCTLA.bit.CAD = AQ_CLEAR;          // Clear PWM1A on event A,
-                                                  // down count
+    // Update the CMPA and CMPB values
+    update_compare(&epwm8_info);
 
-    EPwm1Regs.AQCTLB.bit.CBU = AQ_SET;            // Set PWM1B on event B, up
-                                                  // count
-    EPwm1Regs.AQCTLB.bit.CBD = AQ_CLEAR;          // Clear PWM1B on event B,
-                                                  // down count
+    // Clear INT flag for this timer
+    EPwm8Regs.ETCLR.bit.INT = 1;
 
-    //
-    // Interrupt where we will change the Compare Values
-    //
-    EPwm1Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;     // Select INT on Zero event
-    EPwm1Regs.ETSEL.bit.INTEN = 1;                // Enable INT
-    EPwm1Regs.ETPS.bit.INTPRD = ET_3RD;           // Generate INT on 3rd event
-
-    //
-    // Information this example uses to keep track
-    // of the direction the CMPA/CMPB values are
-    // moving, the min and max allowed values and
-    // a pointer to the correct ePWM registers
-    //
-    epwm1_info.EPwm_CMPA_Direction = EPWM_CMP_UP;   // Start by increasing CMPA
-    epwm1_info.EPwm_CMPB_Direction = EPWM_CMP_DOWN; // & decreasing CMPB
-    epwm1_info.EPwmTimerIntCount = 0;               // Zero the interrupt counter
-    epwm1_info.EPwmRegHandle = &EPwm1Regs;          // Set the pointer to the
-                                                    // ePWM module
-    epwm1_info.EPwmMaxCMPA = EPWM1_MAX_CMPA;        // Setup min/max CMPA/CMPB
-                                                    // values
-    epwm1_info.EPwmMinCMPA = EPWM1_MIN_CMPA;
-    epwm1_info.EPwmMaxCMPB = EPWM1_MAX_CMPB;
-    epwm1_info.EPwmMinCMPB = EPWM1_MIN_CMPB;
+    // Acknowledge this interrupt to receive more interrupts from group 3
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
 }
 
 //
@@ -442,6 +413,7 @@ void InitEPwm2Example()
 //
 // InitEPwm3Example - Initialize EPWM3 configuration
 //
+/*
 void InitEPwm3Example(void)
 {
     //
@@ -503,6 +475,224 @@ void InitEPwm3Example(void)
     epwm3_info.EPwmMinCMPA = EPWM3_MIN_CMPA;
     epwm3_info.EPwmMaxCMPB = EPWM3_MAX_CMPB;
     epwm3_info.EPwmMinCMPB = EPWM3_MIN_CMPB;
+}
+*/
+
+//
+// InitEPwm6Example - Initialize EPWM6 configuration
+//
+void InitEPwm6Example()
+{
+    //
+    // Setup TBCLK
+    //
+    EPwm6Regs.TBPRD = EPWM6_TIMER_TBPRD;       // Set timer period 801 TBCLKs
+    EPwm6Regs.TBPHS.bit.TBPHS = 0x0000;        // Phase is 0
+    EPwm6Regs.TBCTR = 0x0000;                  // Clear counter
+
+    //
+    // Set Compare values
+    //
+    EPwm6Regs.CMPA.bit.CMPA = EPWM6_MIN_CMPA;    // Set compare A value
+    EPwm6Regs.CMPB.bit.CMPB = EPWM6_MAX_CMPB;    // Set Compare B value
+
+    //
+    // Setup counter mode
+    //
+    EPwm6Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // Count up and down
+    EPwm6Regs.TBCTL.bit.PHSEN = TB_DISABLE;        // Disable phase loading
+    EPwm6Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;       // Clock ratio to SYSCLKOUT
+    EPwm6Regs.TBCTL.bit.CLKDIV = TB_DIV1;
+
+    //
+    // Setup shadowing
+    //
+    EPwm6Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    EPwm6Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    EPwm6Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // Load on Zero
+    EPwm6Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+
+    //
+    // Set actions
+    //
+    EPwm6Regs.AQCTLA.bit.CAU = AQ_SET;            // Set PWM1A on event A, up
+                                                  // count
+    EPwm6Regs.AQCTLA.bit.CAD = AQ_CLEAR;          // Clear PWM1A on event A,
+                                                  // down count
+
+    EPwm6Regs.AQCTLB.bit.CBU = AQ_SET;            // Set PWM1B on event B, up
+                                                  // count
+    EPwm6Regs.AQCTLB.bit.CBD = AQ_CLEAR;          // Clear PWM1B on event B,
+                                                  // down count
+
+    //
+    // Interrupt where we will change the Compare Values
+    //
+    EPwm6Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;     // Select INT on Zero event
+    EPwm6Regs.ETSEL.bit.INTEN = 1;                // Enable INT
+    EPwm6Regs.ETPS.bit.INTPRD = ET_3RD;           // Generate INT on 3rd event
+
+    //
+    // Information this example uses to keep track
+    // of the direction the CMPA/CMPB values are
+    // moving, the min and max allowed values and
+    // a pointer to the correct ePWM registers
+    //
+    epwm6_info.EPwm_CMPA_Direction = EPWM_CMP_UP;   // Start by increasing CMPA
+    epwm6_info.EPwm_CMPB_Direction = EPWM_CMP_DOWN; // & decreasing CMPB
+    epwm6_info.EPwmTimerIntCount = 0;               // Zero the interrupt counter
+    epwm6_info.EPwmRegHandle = &EPwm6Regs;          // Set the pointer to the
+                                                    // ePWM module
+    epwm6_info.EPwmMaxCMPA = EPWM6_MAX_CMPA;        // Setup min/max CMPA/CMPB
+                                                    // values
+    epwm6_info.EPwmMinCMPA = EPWM6_MIN_CMPA;
+    epwm6_info.EPwmMaxCMPB = EPWM6_MAX_CMPB;
+    epwm6_info.EPwmMinCMPB = EPWM6_MIN_CMPB;
+}
+
+
+//
+// InitEPwm7Example - Initialize EPWM7 configuration
+//
+void InitEPwm7Example()
+{
+    //
+    // Setup TBCLK
+    //
+    EPwm7Regs.TBPRD = EPWM7_TIMER_TBPRD;       // Set timer period 801 TBCLKs
+    EPwm7Regs.TBPHS.bit.TBPHS = 0x0000;        // Phase is 0
+    EPwm7Regs.TBCTR = 0x0000;                  // Clear counter
+
+    //
+    // Set Compare values
+    //
+    EPwm7Regs.CMPA.bit.CMPA = EPWM7_MIN_CMPA;    // Set compare A value
+    EPwm7Regs.CMPB.bit.CMPB = EPWM7_MAX_CMPB;    // Set Compare B value
+
+    //
+    // Setup counter mode
+    //
+    EPwm7Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // Count up and down
+    EPwm7Regs.TBCTL.bit.PHSEN = TB_DISABLE;        // Disable phase loading
+    EPwm7Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;       // Clock ratio to SYSCLKOUT
+    EPwm7Regs.TBCTL.bit.CLKDIV = TB_DIV1;
+
+    //
+    // Setup shadowing
+    //
+    EPwm7Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    EPwm7Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    EPwm7Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // Load on Zero
+    EPwm7Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+
+    //
+    // Set actions
+    //
+    EPwm7Regs.AQCTLA.bit.CAU = AQ_SET;            // Set PWM1A on event A, up
+                                                  // count
+    EPwm7Regs.AQCTLA.bit.CAD = AQ_CLEAR;          // Clear PWM1A on event A,
+                                                  // down count
+
+    EPwm7Regs.AQCTLB.bit.CBU = AQ_SET;            // Set PWM1B on event B, up
+                                                  // count
+    EPwm7Regs.AQCTLB.bit.CBD = AQ_CLEAR;          // Clear PWM1B on event B,
+                                                  // down count
+
+    //
+    // Interrupt where we will change the Compare Values
+    //
+    EPwm7Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;     // Select INT on Zero event
+    EPwm7Regs.ETSEL.bit.INTEN = 1;                // Enable INT
+    EPwm7Regs.ETPS.bit.INTPRD = ET_3RD;           // Generate INT on 3rd event
+
+    //
+    // Information this example uses to keep track
+    // of the direction the CMPA/CMPB values are
+    // moving, the min and max allowed values and
+    // a pointer to the correct ePWM registers
+    //
+    epwm7_info.EPwm_CMPA_Direction = EPWM_CMP_UP;   // Start by increasing CMPA
+    epwm7_info.EPwm_CMPB_Direction = EPWM_CMP_DOWN; // & decreasing CMPB
+    epwm7_info.EPwmTimerIntCount = 0;               // Zero the interrupt counter
+    epwm7_info.EPwmRegHandle = &EPwm7Regs;          // Set the pointer to the
+                                                    // ePWM module
+    epwm7_info.EPwmMaxCMPA = EPWM7_MAX_CMPA;        // Setup min/max CMPA/CMPB
+                                                    // values
+    epwm7_info.EPwmMinCMPA = EPWM7_MIN_CMPA;
+    epwm7_info.EPwmMaxCMPB = EPWM7_MAX_CMPB;
+    epwm7_info.EPwmMinCMPB = EPWM7_MIN_CMPB;
+}
+
+//
+// InitEPwm8Example - Initialize EPWM8 configuration
+//
+void InitEPwm8Example()
+{
+    //
+    // Setup TBCLK
+    //
+    EPwm8Regs.TBPRD = EPWM8_TIMER_TBPRD;       // Set timer period 801 TBCLKs
+    EPwm8Regs.TBPHS.bit.TBPHS = 0x0000;        // Phase is 0
+    EPwm8Regs.TBCTR = 0x0000;                  // Clear counter
+
+    //
+    // Set Compare values
+    //
+    EPwm8Regs.CMPA.bit.CMPA = EPWM8_MIN_CMPA;    // Set compare A value
+    EPwm8Regs.CMPB.bit.CMPB = EPWM8_MAX_CMPB;    // Set Compare B value
+
+    //
+    // Setup counter mode
+    //
+    EPwm8Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // Count up and down
+    EPwm8Regs.TBCTL.bit.PHSEN = TB_DISABLE;        // Disable phase loading
+    EPwm8Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;       // Clock ratio to SYSCLKOUT
+    EPwm8Regs.TBCTL.bit.CLKDIV = TB_DIV1;
+
+    //
+    // Setup shadowing
+    //
+    EPwm8Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+    EPwm8Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+    EPwm8Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // Load on Zero
+    EPwm8Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+
+    //
+    // Set actions
+    //
+    EPwm8Regs.AQCTLA.bit.CAU = AQ_SET;            // Set PWM1A on event A, up
+                                                  // count
+    EPwm8Regs.AQCTLA.bit.CAD = AQ_CLEAR;          // Clear PWM1A on event A,
+                                                  // down count
+
+    EPwm8Regs.AQCTLB.bit.CBU = AQ_SET;            // Set PWM1B on event B, up
+                                                  // count
+    EPwm8Regs.AQCTLB.bit.CBD = AQ_CLEAR;          // Clear PWM1B on event B,
+                                                  // down count
+
+    //
+    // Interrupt where we will change the Compare Values
+    //
+    EPwm8Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;     // Select INT on Zero event
+    EPwm8Regs.ETSEL.bit.INTEN = 1;                // Enable INT
+    EPwm8Regs.ETPS.bit.INTPRD = ET_3RD;           // Generate INT on 3rd event
+
+    //
+    // Information this example uses to keep track
+    // of the direction the CMPA/CMPB values are
+    // moving, the min and max allowed values and
+    // a pointer to the correct ePWM registers
+    //
+    epwm8_info.EPwm_CMPA_Direction = EPWM_CMP_UP;   // Start by increasing CMPA
+    epwm8_info.EPwm_CMPB_Direction = EPWM_CMP_DOWN; // & decreasing CMPB
+    epwm8_info.EPwmTimerIntCount = 0;               // Zero the interrupt counter
+    epwm8_info.EPwmRegHandle = &EPwm8Regs;          // Set the pointer to the
+                                                    // ePWM module
+    epwm8_info.EPwmMaxCMPA = EPWM8_MAX_CMPA;        // Setup min/max CMPA/CMPB
+                                                    // values
+    epwm8_info.EPwmMinCMPA = EPWM8_MIN_CMPA;
+    epwm8_info.EPwmMaxCMPB = EPWM8_MAX_CMPB;
+    epwm8_info.EPwmMinCMPB = EPWM8_MIN_CMPB;
 }
 
 //

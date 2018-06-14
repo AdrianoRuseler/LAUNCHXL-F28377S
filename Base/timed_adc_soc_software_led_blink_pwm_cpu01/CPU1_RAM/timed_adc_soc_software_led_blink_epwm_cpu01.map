@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Sat May 26 15:15:14 2018
+>> Linked Mon May 28 15:16:22 2018
 
 OUTPUT FILE NAME:   <timed_adc_soc_software_led_blink_epwm_cpu01.out>
 ENTRY POINT SYMBOL: "code_start"  address: 00000000
@@ -14,12 +14,12 @@ MEMORY CONFIGURATION
 PAGE 0:
   BEGIN                 00000000   00000002  00000002  00000000  RWIX
   RAMM0                 00000122   000002de  000002dd  00000001  RWIX
-  RAMLS0                00008000   00000800  000007ef  00000011  RWIX
-  RAMLS1                00008800   00000800  00000037  000007c9  RWIX
+  RAMLS0                00008000   00000800  000007fe  00000002  RWIX
+  RAMLS1                00008800   00000800  0000001e  000007e2  RWIX
   RAMLS2                00009000   00000800  00000000  00000800  RWIX
   RAMLS3                00009800   00000800  00000000  00000800  RWIX
   RAMLS4                0000a000   00000800  00000000  00000800  RWIX
-  RAMD0                 0000b000   00000800  000007ed  00000013  RWIX
+  RAMD0                 0000b000   00000800  000007f7  00000009  RWIX
   RESET                 003fffc0   00000002  00000000  00000002  RWIX
 
 PAGE 1:
@@ -570,30 +570,33 @@ CpuSysRegsFile
                   0005d300    00000082     F2837xS_GlobalVariableDefs.obj (CpuSysRegsFile)
 
 .text.1    0    00000140    000002bf     
-                  00000140    0000028a     timed_adc_soc_software_led_blink_epwm_cpu01.obj (.text)
-                  000003ca    00000029     rts2800_fpu32.lib : exit.c.obj (.text)
-                  000003f3    00000009                       : _lock.c.obj (.text)
-                  000003fc    00000002                       : pre_init.c.obj (.text)
+                  00000140    00000240     F2837xS_Gpio.obj (.text)
+                  00000380    0000007c     F2837xS_CpuTimers.obj (.text)
+                  000003fc    00000002     rts2800_fpu32.lib : pre_init.c.obj (.text)
                   000003fe    00000001                       : startup.c.obj (.text)
 
-.text.2    0    00008000    000007ef     
+.text.2    0    00008000    000007fe     
                   00008000    00000485     F2837xS_SysCtrl.obj (.text)
-                  00008485    000000ed     timed_adc_soc_software_led_blink_epwm_cpu01.obj (.text:retain)
-                  00008572    000000d9     F2837xS_Adc.obj (.text)
-                  0000864b    00000088     rts2800_fpu32.lib : fs_div28.asm.obj (.text)
-                  000086d3    0000007c     F2837xS_CpuTimers.obj (.text)
-                  0000874f    00000056     rts2800_fpu32.lib : boot28.asm.obj (.text)
-                  000087a5    00000026     F2837xS_PieVect.obj (.text)
-                  000087cb    00000024     rts2800_fpu32.lib : cpy_tbl.c.obj (.text)
+                  00008485    000000a5     ISR.obj (.text:retain)
+                  0000852a    0000008b     ADC.obj (.text)
+                  000085b5    00000088     rts2800_fpu32.lib : fs_div28.asm.obj (.text)
+                  0000863d    0000006f     timed_adc_soc_software_led_blink_epwm_cpu01.obj (.text)
+                  000086ac    00000056     rts2800_fpu32.lib : boot28.asm.obj (.text)
+                  00008702    00000048     timed_adc_soc_software_led_blink_epwm_cpu01.obj (.text:retain)
+                  0000874a    00000029     rts2800_fpu32.lib : exit.c.obj (.text)
+                  00008773    00000028     F2837xS_PieCtrl.obj (.text)
+                  0000879b    00000026     F2837xS_PieVect.obj (.text)
+                  000087c1    00000024     rts2800_fpu32.lib : cpy_tbl.c.obj (.text)
+                  000087e5    00000019                       : args_main.c.obj (.text)
 
-.text.3    0    00008800    00000037     
+.text.3    0    00008800    0000001e     
                   00008800    0000001e     rts2800_fpu32.lib : memcpy.c.obj (.text)
-                  0000881e    00000019                       : args_main.c.obj (.text)
 
-.text.4    0    0000b000    000007ed     
+.text.4    0    0000b000    000007f7     
                   0000b000    00000585     F2837xS_DefaultISR.obj (.text:retain)
-                  0000b585    00000240     F2837xS_Gpio.obj (.text)
-                  0000b7c5    00000028     F2837xS_PieCtrl.obj (.text)
+                  0000b585    00000190     ePWM.obj (.text)
+                  0000b715    000000d9     F2837xS_Adc.obj (.text)
+                  0000b7ee    00000009     rts2800_fpu32.lib : _lock.c.obj (.text)
 
 MODULE SUMMARY
 
@@ -603,18 +606,25 @@ MODULE SUMMARY
        F2837xS_GlobalVariableDefs.obj                    0      0                  9085              
        F2837xS_DefaultISR.obj                            1413   0                  0                 
        F2837xS_SysCtrl.obj                               1157   0                  0                 
-       timed_adc_soc_software_led_blink_epwm_cpu01.obj   887    0                  34                
        F2837xS_Gpio.obj                                  576    0                  0                 
        F2837xS_PieVect.obj                               38     448                0                 
        F2837xS_Adc.obj                                   217    0                  0                 
+       timed_adc_soc_software_led_blink_epwm_cpu01.obj   183    0                  34                
        F2837xS_CpuTimers.obj                             124    0                  24                
        F2837xS_PieCtrl.obj                               40     0                  0                 
        F2837xS_usDelay.obj                               4      0                  0                 
        F2837xS_CodeStartBranch.obj                       2      0                  0                 
     +--+-------------------------------------------------+------+------------------+--------------------+
-       Total:                                            4458   448                9143              
+       Total:                                            3754   448                9143              
                                                                                                      
-    C:/ti/ti-cgt-c2000_18.1.1.LTS/lib/rts2800_fpu32.lib
+    .\Source\
+       ePWM.obj                                          400    0                  0                 
+       ISR.obj                                           165    0                  0                 
+       ADC.obj                                           139    0                  0                 
+    +--+-------------------------------------------------+------+------------------+--------------------+
+       Total:                                            704    0                  0                 
+                                                                                                     
+    C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/lib/rts2800_fpu32.lib
        fs_div28.asm.obj                                  136    0                  0                 
        boot28.asm.obj                                    86     0                  0                 
        exit.c.obj                                        41     14                 6                 
@@ -767,13 +777,13 @@ address     data page           name
 
 0000a800     2a0 (0000a800)     _PieVectTableInit
 
-0000a9c0     2a7 (0000a9c0)     _AdcbResult1
-0000a9c1     2a7 (0000a9c0)     _AdcaResult1
-0000a9c2     2a7 (0000a9c0)     _AdcbResult0
+0000a9c0     2a7 (0000a9c0)     _AdcbResult0
+0000a9c1     2a7 (0000a9c0)     _AdcbResult1
+0000a9c2     2a7 (0000a9c0)     _AdcaResult1
 0000a9c3     2a7 (0000a9c0)     _AdcaResult0
 0000a9c4     2a7 (0000a9c0)     _epwm2_info
-0000a9ce     2a7 (0000a9c0)     _epwm3_info
-0000a9d8     2a7 (0000a9c0)     _epwm1_info
+0000a9ce     2a7 (0000a9c0)     _epwm1_info
+0000a9d8     2a7 (0000a9c0)     _epwm3_info
 0000a9e2     2a7 (0000a9c0)     _CpuTimer1
 0000a9ea     2a7 (0000a9c0)     _CpuTimer2
 0000a9f2     2a7 (0000a9c0)     _CpuTimer0
@@ -834,8 +844,8 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 page  address   name                                  
 ----  -------   ----                                  
 abs   ffffffff  .text                                 
-0     000003ca  C$$EXIT                               
-0     0000864b  FS$$DIV                               
+0     0000874a  C$$EXIT                               
+0     000085b5  FS$$DIV                               
 0     0000b0be  _ADCA1_ISR                            
 0     0000b33e  _ADCA2_ISR                            
 0     0000b348  _ADCA3_ISR                            
@@ -858,14 +868,14 @@ abs   ffffffff  .text
 0     0000b4ec  _ADCD_EVT_ISR                         
 0     0000b546  _AUX_PLL_SLIP_ISR                     
 1     0005f4c0  _AccessProtectionRegs                 
-0     00008572  _AdcSetMode                           
+0     0000b715  _AdcSetMode                           
 1     00007400  _AdcaRegs                             
 1     0000a9c3  _AdcaResult0                          
-1     0000a9c1  _AdcaResult1                          
+1     0000a9c2  _AdcaResult1                          
 1     00000b00  _AdcaResultRegs                       
 1     00007480  _AdcbRegs                             
-1     0000a9c2  _AdcbResult0                          
-1     0000a9c0  _AdcbResult1                          
+1     0000a9c0  _AdcbResult0                          
+1     0000a9c1  _AdcbResult1                          
 1     00000b20  _AdcbResultRegs                       
 1     00007500  _AdccRegs                             
 1     00000b40  _AdccResultRegs                       
@@ -889,7 +899,7 @@ abs   ffffffff  .text
 0     0000b3ca  _CLA1_8_ISR                           
 0     0000b550  _CLA_OVERFLOW_ISR                     
 0     0000b55a  _CLA_UNDERFLOW_ISR                    
-0     00008611  _CalAdcINL                            
+0     0000b7b4  _CalAdcINL                            
 1     00048000  _CanaRegs                             
 1     0004a000  _CanbRegs                             
 1     00001400  _Cla1Regs                             
@@ -903,8 +913,8 @@ abs   ffffffff  .text
 1     00005d20  _Cmpss6Regs                           
 1     00005d40  _Cmpss7Regs                           
 1     00005d60  _Cmpss8Regs                           
-0     00008714  _ConfigCpuTimer                       
-0     000001db  _ConfigureADC                         
+0     000003c1  _ConfigCpuTimer                       
+0     0000852a  _ConfigureADC                         
 1     0005d300  _CpuSysRegs                           
 1     0000a9f2  _CpuTimer0                            
 1     00000c00  _CpuTimer0Regs                        
@@ -995,7 +1005,7 @@ abs   ffffffff  .text
 1     00047800  _Emif2Regs                            
 1     00000d00  _EmuBMode                             
 1     00000d01  _EmuBootPins                          
-0     0000b7e4  _EnableInterrupts                     
+0     00008792  _EnableInterrupts                     
 0     0000013c  _F28x_usDelay                         
 0     0000b528  _FLASH_CORRECTABLE_ERROR_ISR          
 0     0000b3fc  _FPU_OVERFLOW_ISR                     
@@ -1005,19 +1015,19 @@ abs   ffffffff  .text
 1     0005fc00  _Flash1CtrlRegs                       
 1     0005ff00  _Flash1EccRegs                        
 1     00050024  _FlashPumpSemaphoreRegs               
-0     0000b77a  _GPIO_EnableUnbondedIOPullups         
-0     0000b755  _GPIO_EnableUnbondedIOPullupsFor100Pin
-0     0000b73c  _GPIO_EnableUnbondedIOPullupsFor176Pin
-0     0000b790  _GPIO_ReadPin                         
-0     0000b6e1  _GPIO_SetupLock                       
-0     0000b5c5  _GPIO_SetupPinMux                     
-0     0000b64d  _GPIO_SetupPinOptions                 
-0     0000b70a  _GPIO_SetupXINT1Gpio                  
-0     0000b714  _GPIO_SetupXINT2Gpio                  
-0     0000b71e  _GPIO_SetupXINT3Gpio                  
-0     0000b728  _GPIO_SetupXINT4Gpio                  
-0     0000b732  _GPIO_SetupXINT5Gpio                  
-0     0000b7a7  _GPIO_WritePin                        
+0     00000335  _GPIO_EnableUnbondedIOPullups         
+0     00000310  _GPIO_EnableUnbondedIOPullupsFor100Pin
+0     000002f7  _GPIO_EnableUnbondedIOPullupsFor176Pin
+0     0000034b  _GPIO_ReadPin                         
+0     0000029c  _GPIO_SetupLock                       
+0     00000180  _GPIO_SetupPinMux                     
+0     00000208  _GPIO_SetupPinOptions                 
+0     000002c5  _GPIO_SetupXINT1Gpio                  
+0     000002cf  _GPIO_SetupXINT2Gpio                  
+0     000002d9  _GPIO_SetupXINT3Gpio                  
+0     000002e3  _GPIO_SetupXINT4Gpio                  
+0     000002ed  _GPIO_SetupXINT5Gpio                  
+0     00000362  _GPIO_WritePin                        
 1     00007c00  _GpioCtrlRegs                         
 1     00007f00  _GpioDataRegs                         
 0     00008460  _HALT                                 
@@ -1035,15 +1045,15 @@ abs   ffffffff  .text
 0     0000b424  _IPC2_ISR                             
 0     0000b42e  _IPC3_ISR                             
 0     00008300  _InitAuxPll                           
-0     000086d3  _InitCpuTimers                        
-0     00000266  _InitEPwm1Example                     
-0     000002b8  _InitEPwm2Example                     
-0     0000030a  _InitEPwm3Example                     
-0     000001af  _InitEPwmGpio                         
-0     0000b585  _InitGpio                             
+0     00000380  _InitCpuTimers                        
+0     0000b5b1  _InitEPwm1Example                     
+0     0000b603  _InitEPwm2Example                     
+0     0000b655  _InitEPwm3Example                     
+0     0000b585  _InitEPwmGpio                         
+0     00000140  _InitGpio                             
 0     00008031  _InitPeripheralClocks                 
-0     0000b7c5  _InitPieCtrl                          
-0     000087a5  _InitPieVectTable                     
+0     00008773  _InitPieCtrl                          
+0     0000879b  _InitPieVectTable                     
 0     00008000  _InitSysCtrl                          
 0     00008111  _InitSysPll                           
 1     00007900  _InputXbarRegs                        
@@ -1096,7 +1106,7 @@ abs   ffffffff  .text
 0     000080cd  _SeizeFlashPump_Bank0                 
 0     000080dc  _SeizeFlashPump_Bank1                 
 0     000080f5  _ServiceDog                           
-0     0000020b  _SetupADCSoftware                     
+0     0000855a  _SetupADCSoftware                     
 1     00006100  _SpiaRegs                             
 1     00006110  _SpibRegs                             
 1     00006120  _SpicRegs                             
@@ -1146,29 +1156,29 @@ abs   ffffffff  ___c_args__
 abs   ffffffff  ___etext__                            
 abs   ffffffff  ___pinit__                            
 abs   ffffffff  ___text__                             
-0     0000881e  __args_main                           
+0     000087e5  __args_main                           
 1     0000aa00  __lock                                
-0     000003fb  __nop                                 
-0     000003f7  __register_lock                       
-0     000003f3  __register_unlock                     
+0     0000b7f6  __nop                                 
+0     0000b7f2  __register_lock                       
+0     0000b7ee  __register_unlock                     
 1     00000400  __stack                               
 0     000003fe  __system_post_cinit                   
 0     000003fc  __system_pre_init                     
 1     0000aa02  __unlock                              
-0     000003ca  _abort                                
-0     0000874f  _c_int00                              
-0     000087cb  _copy_in                              
-0     00008485  _cpu_timer0_isr                       
-1     0000a9d8  _epwm1_info                           
-0     000084cd  _epwm1_isr                            
+0     0000874a  _abort                                
+0     000086ac  _c_int00                              
+0     000087c1  _copy_in                              
+0     00008702  _cpu_timer0_isr                       
+1     0000a9ce  _epwm1_info                           
+0     00008485  _epwm1_isr                            
 1     0000a9c4  _epwm2_info                           
-0     00008504  _epwm2_isr                            
-1     0000a9ce  _epwm3_info                           
-0     0000853b  _epwm3_isr                            
-0     000003cc  _exit                                 
-0     00000140  _main                                 
+0     000084bc  _epwm2_isr                            
+1     0000a9d8  _epwm3_info                           
+0     000084f3  _epwm3_isr                            
+0     0000874c  _exit                                 
+0     0000863d  _main                                 
 0     00008800  _memcpy                               
-0     0000035d  _update_compare                       
+0     0000b6a8  _update_compare                       
 abs   ffffffff  binit                                 
 0     00000122  cinit                                 
 0     00000000  code_start                            
@@ -1184,20 +1194,22 @@ page  address   name
 0     00000122  ___cinit__                            
 0     00000122  cinit                                 
 0     0000013c  _F28x_usDelay                         
-0     00000140  _main                                 
-0     000001af  _InitEPwmGpio                         
-0     000001db  _ConfigureADC                         
-0     0000020b  _SetupADCSoftware                     
-0     00000266  _InitEPwm1Example                     
-0     000002b8  _InitEPwm2Example                     
-0     0000030a  _InitEPwm3Example                     
-0     0000035d  _update_compare                       
-0     000003ca  C$$EXIT                               
-0     000003ca  _abort                                
-0     000003cc  _exit                                 
-0     000003f3  __register_unlock                     
-0     000003f7  __register_lock                       
-0     000003fb  __nop                                 
+0     00000140  _InitGpio                             
+0     00000180  _GPIO_SetupPinMux                     
+0     00000208  _GPIO_SetupPinOptions                 
+0     0000029c  _GPIO_SetupLock                       
+0     000002c5  _GPIO_SetupXINT1Gpio                  
+0     000002cf  _GPIO_SetupXINT2Gpio                  
+0     000002d9  _GPIO_SetupXINT3Gpio                  
+0     000002e3  _GPIO_SetupXINT4Gpio                  
+0     000002ed  _GPIO_SetupXINT5Gpio                  
+0     000002f7  _GPIO_EnableUnbondedIOPullupsFor176Pin
+0     00000310  _GPIO_EnableUnbondedIOPullupsFor100Pin
+0     00000335  _GPIO_EnableUnbondedIOPullups         
+0     0000034b  _GPIO_ReadPin                         
+0     00000362  _GPIO_WritePin                        
+0     00000380  _InitCpuTimers                        
+0     000003c1  _ConfigCpuTimer                       
 0     000003fc  __system_pre_init                     
 0     000003fe  __system_post_cinit                   
 0     00000ce0  _Cla1SoftIntRegs                      
@@ -1222,20 +1234,24 @@ page  address   name
 0     00008455  _STANDBY                              
 0     00008460  _HALT                                 
 0     00008471  _HIB                                  
-0     00008485  _cpu_timer0_isr                       
-0     000084cd  _epwm1_isr                            
-0     00008504  _epwm2_isr                            
-0     0000853b  _epwm3_isr                            
-0     00008572  _AdcSetMode                           
-0     00008611  _CalAdcINL                            
-0     0000864b  FS$$DIV                               
-0     000086d3  _InitCpuTimers                        
-0     00008714  _ConfigCpuTimer                       
-0     0000874f  _c_int00                              
-0     000087a5  _InitPieVectTable                     
-0     000087cb  _copy_in                              
+0     00008485  _epwm1_isr                            
+0     000084bc  _epwm2_isr                            
+0     000084f3  _epwm3_isr                            
+0     0000852a  _ConfigureADC                         
+0     0000855a  _SetupADCSoftware                     
+0     000085b5  FS$$DIV                               
+0     0000863d  _main                                 
+0     000086ac  _c_int00                              
+0     00008702  _cpu_timer0_isr                       
+0     0000874a  C$$EXIT                               
+0     0000874a  _abort                                
+0     0000874c  _exit                                 
+0     00008773  _InitPieCtrl                          
+0     00008792  _EnableInterrupts                     
+0     0000879b  _InitPieVectTable                     
+0     000087c1  _copy_in                              
+0     000087e5  __args_main                           
 0     00008800  _memcpy                               
-0     0000881e  __args_main                           
 0     0000b000  _TIMER1_ISR                           
 0     0000b00a  _TIMER2_ISR                           
 0     0000b014  _DATALOG_ISR                          
@@ -1377,22 +1393,16 @@ page  address   name
 0     0000b564  _PIE_RESERVED_ISR                     
 0     0000b56e  _EMPTY_ISR                            
 0     0000b57b  _NOTUSED_ISR                          
-0     0000b585  _InitGpio                             
-0     0000b5c5  _GPIO_SetupPinMux                     
-0     0000b64d  _GPIO_SetupPinOptions                 
-0     0000b6e1  _GPIO_SetupLock                       
-0     0000b70a  _GPIO_SetupXINT1Gpio                  
-0     0000b714  _GPIO_SetupXINT2Gpio                  
-0     0000b71e  _GPIO_SetupXINT3Gpio                  
-0     0000b728  _GPIO_SetupXINT4Gpio                  
-0     0000b732  _GPIO_SetupXINT5Gpio                  
-0     0000b73c  _GPIO_EnableUnbondedIOPullupsFor176Pin
-0     0000b755  _GPIO_EnableUnbondedIOPullupsFor100Pin
-0     0000b77a  _GPIO_EnableUnbondedIOPullups         
-0     0000b790  _GPIO_ReadPin                         
-0     0000b7a7  _GPIO_WritePin                        
-0     0000b7c5  _InitPieCtrl                          
-0     0000b7e4  _EnableInterrupts                     
+0     0000b585  _InitEPwmGpio                         
+0     0000b5b1  _InitEPwm1Example                     
+0     0000b603  _InitEPwm2Example                     
+0     0000b655  _InitEPwm3Example                     
+0     0000b6a8  _update_compare                       
+0     0000b715  _AdcSetMode                           
+0     0000b7b4  _CalAdcINL                            
+0     0000b7ee  __register_unlock                     
+0     0000b7f2  __register_lock                       
+0     0000b7f6  __nop                                 
 1     00000400  __stack                               
 1     00000500  __STACK_END                           
 1     00000b00  _AdcaResultRegs                       
@@ -1470,13 +1480,13 @@ page  address   name
 1     00007c00  _GpioCtrlRegs                         
 1     00007f00  _GpioDataRegs                         
 1     0000a800  _PieVectTableInit                     
-1     0000a9c0  _AdcbResult1                          
-1     0000a9c1  _AdcaResult1                          
-1     0000a9c2  _AdcbResult0                          
+1     0000a9c0  _AdcbResult0                          
+1     0000a9c1  _AdcbResult1                          
+1     0000a9c2  _AdcaResult1                          
 1     0000a9c3  _AdcaResult0                          
 1     0000a9c4  _epwm2_info                           
-1     0000a9ce  _epwm3_info                           
-1     0000a9d8  _epwm1_info                           
+1     0000a9ce  _epwm1_info                           
+1     0000a9d8  _epwm3_info                           
 1     0000a9e2  _CpuTimer1                            
 1     0000a9ea  _CpuTimer2                            
 1     0000a9f2  _CpuTimer0                            

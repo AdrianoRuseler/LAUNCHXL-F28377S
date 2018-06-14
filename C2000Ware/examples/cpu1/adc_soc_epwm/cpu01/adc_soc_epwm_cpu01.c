@@ -179,8 +179,8 @@ void main(void)
         //
         //start ePWM
         //
-        EPwm1Regs.ETSEL.bit.SOCAEN = 1;  //enable SOCA
-        EPwm1Regs.TBCTL.bit.CTRMODE = 0; //unfreeze, and enter up count mode
+        EPwm2Regs.ETSEL.bit.SOCAEN = 1;  //enable SOCA
+        EPwm2Regs.TBCTL.bit.CTRMODE = 0; //unfreeze, and enter up count mode
 
         //
         //wait while ePWM causes ADC conversions, which then cause interrupts,
@@ -193,8 +193,8 @@ void main(void)
         //
         //stop ePWM
         //
-        EPwm1Regs.ETSEL.bit.SOCAEN = 0;  //disable SOCA
-        EPwm1Regs.TBCTL.bit.CTRMODE = 3; //freeze counter
+        EPwm2Regs.ETSEL.bit.SOCAEN = 0;  //disable SOCA
+        EPwm2Regs.TBCTL.bit.CTRMODE = 3; //freeze counter
 
         //
         //at this point, AdcaResults[] contains a sequence of conversions
@@ -204,7 +204,7 @@ void main(void)
         //
         //software breakpoint, hit run again to get updated conversions
         //
-        asm("   ESTOP0");
+      //  asm("   ESTOP0");
     }while(1);
 }
 
@@ -247,12 +247,12 @@ void ConfigureEPWM(void)
 {
     EALLOW;
     // Assumes ePWM clock is already enabled
-    EPwm1Regs.ETSEL.bit.SOCAEN    = 0;    // Disable SOC on A group
-    EPwm1Regs.ETSEL.bit.SOCASEL    = 4;   // Select SOC on up-count
-    EPwm1Regs.ETPS.bit.SOCAPRD = 1;       // Generate pulse on 1st event
-    EPwm1Regs.CMPA.bit.CMPA = 0x0800;     // Set compare A value to 2048 counts
-    EPwm1Regs.TBPRD = 0x1000;             // Set period to 4096 counts
-    EPwm1Regs.TBCTL.bit.CTRMODE = 3;      // freeze counter
+    EPwm2Regs.ETSEL.bit.SOCAEN    = 0;    // Disable SOC on A group
+    EPwm2Regs.ETSEL.bit.SOCASEL    = 4;   // Select SOC on up-count
+    EPwm2Regs.ETPS.bit.SOCAPRD = 1;       // Generate pulse on 1st event
+    EPwm2Regs.CMPA.bit.CMPA = 0x0800;     // Set compare A value to 2048 counts
+    EPwm2Regs.TBPRD = 0x1000;             // Set period to 4096 counts
+    EPwm2Regs.TBCTL.bit.CTRMODE = 3;      // freeze counter
     EDIS;
 }
 
@@ -281,12 +281,15 @@ void SetupADCEpwm(Uint16 channel)
     EALLOW;
     AdcaRegs.ADCSOC0CTL.bit.CHSEL = channel;  //SOC0 will convert pin A0
     AdcaRegs.ADCSOC0CTL.bit.ACQPS = acqps; //sample window is 100 SYSCLK cycles
-    AdcaRegs.ADCSOC0CTL.bit.TRIGSEL = 5; //trigger on ePWM1 SOCA/C
+    AdcaRegs.ADCSOC0CTL.bit.TRIGSEL = 0x7; //trigger on ePWM2 SOCA/C
     AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0; //end of SOC0 will set INT1 flag
     AdcaRegs.ADCINTSEL1N2.bit.INT1E = 1;   //enable INT1 flag
     AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1; //make sure INT1 flag is cleared
     EDIS;
 }
+
+//07h BURSTTRIG7 - ePWM2, ADCSOCA
+//08h BURSTTRIG8 - ePWM2, ADCSOCB
 
 //
 // adca1_isr - Read ADC Buffer in ISR

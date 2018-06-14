@@ -4,13 +4,13 @@ timed_adc_soc_software_led_blink_epwm_cpu01.obj: ../timed_adc_soc_software_led_b
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F28x_Project.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_Cla_typedefs.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_device.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/assert.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/_ti_config.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/linkage.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stdarg.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stdbool.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stddef.h
-timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stdint.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/assert.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/_ti_config.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/linkage.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stdarg.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stdbool.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stddef.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stdint.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_adc.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_analogsubsys.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_cla.h
@@ -56,18 +56,19 @@ timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_0
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_SysCtrl_defines.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_Upp_defines.h
 timed_adc_soc_software_led_blink_epwm_cpu01.obj: C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_defaultisr.h
+timed_adc_soc_software_led_blink_epwm_cpu01.obj: A:/Dropbox/GitHub/LAUNCHXL-F28377S/Base/timed_adc_soc_software_led_blink_pwm_cpu01/Header/ePWM.h
 
 ../timed_adc_soc_software_led_blink_epwm_cpu01.c: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F28x_Project.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_Cla_typedefs.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_device.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/assert.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/_ti_config.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/linkage.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stdarg.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stdbool.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stddef.h: 
-C:/ti/ti-cgt-c2000_18.1.1.LTS/include/stdint.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/assert.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/_ti_config.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/linkage.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stdarg.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stdbool.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stddef.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.1.LTS/include/stdint.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_adc.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_analogsubsys.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/headers/include/F2837xS_cla.h: 
@@ -113,3 +114,4 @@ C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_D
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_SysCtrl_defines.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_Upp_defines.h: 
 C:/ti/c2000/C2000Ware_1_00_04_00/device_support/f2837xs/common/include/F2837xS_defaultisr.h: 
+A:/Dropbox/GitHub/LAUNCHXL-F28377S/Base/timed_adc_soc_software_led_blink_pwm_cpu01/Header/ePWM.h: 

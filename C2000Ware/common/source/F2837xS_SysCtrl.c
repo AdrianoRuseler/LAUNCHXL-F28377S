@@ -53,6 +53,7 @@
 using std::memcpy;
 #endif
 
+
 #define STATUS_FAIL          0
 #define STATUS_SUCCESS       1
 #define TMR1SYSCLKCTR        0xF0000000
@@ -171,7 +172,7 @@ void InitSysCtrl(void)
 #ifdef _LAUNCHXL_F28377S
     InitSysPll(XTAL_OSC,IMULT_40,FMULT_0,PLLCLK_BY_2);
 #else
-    InitSysPll(XTAL_OSC,IMULT_20,FMULT_0,PLLCLK_BY_2);
+    InitSysPll(XTAL_OSC,IMULT_40,FMULT_0,PLLCLK_BY_2);
 #endif
 
     //
